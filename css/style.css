@@ -60,7 +60,7 @@
 /* ---------- Reset ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 96px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
@@ -101,6 +101,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing:
 .section {
   padding-block: var(--sp-9);
   border-top: 1px solid var(--line);
+  scroll-margin-top: 80px;
 }
 
 .section-head {
@@ -787,9 +788,14 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing:
 .ticker-track .wrap span { white-space: nowrap; opacity: 0.85; }
 @keyframes tick { to { transform: translateX(-50%); } }
 .nav-close { display: none; }
-.nav-overlay { position: fixed; inset: 0; background: rgba(23, 20, 15, 0.5); opacity: 0; transition: opacity 0.3s ease; z-index: 45; pointer-events: none; }
+/* El overlay debe quedar POR DEBAJO del header: .main-nav vive dentro de
+   .site-header (z-index 40) y su z-index propio no puede superarlo por el
+   stacking context. Si el overlay queda arriba, intercepta todos los taps
+   del menú móvil y los links nunca navegan. */
+.nav-overlay { position: fixed; inset: 0; background: rgba(23, 20, 15, 0.5); opacity: 0; transition: opacity 0.3s ease; z-index: 35; pointer-events: none; }
 .nav-overlay.is-visible { pointer-events: auto; opacity: 1; }
 body.nav-open { overflow: hidden; }
+body.nav-open .site-header { z-index: 60; }
 @media (max-width: 900px) {
   .nav-close { display: block; position: absolute; top: var(--sp-4); right: var(--sp-5); color: var(--paper-soft); font-size: 2rem; line-height: 1; padding: var(--sp-2); }
 }

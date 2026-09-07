@@ -113,13 +113,45 @@ function wireGlobalHeader() {
     if (!nav.querySelector("[data-nav-close]")) {
       const c = document.createElement("button");
       c.className = "nav-close";
+      c.setAttribute("type", "button");
       c.setAttribute("data-nav-close", "");
       c.setAttribute("aria-label", "Cerrar menú");
       c.textContent = "×";
       c.addEventListener("click", () => setNav(false));
       nav.prepend(c);
     }
-    nav.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setNav(false)));
+    // Cerrar al navegar. Si el link es un ancla de la página actual
+    // (ej. "index.html#nosotros" estando en index.html), se evita la
+    // recarga y se hace scroll suave con el header ya liberado.
+    nav.querySelectorAll("a").forEach((a) => a.addEventListener("click", (e) => {
+      const href = a.getAttribute("href") || "";
+      const hashIdx = href.indexOf("#");
+      if (hashIdx !== -1) {
+        const pagePart = href.slice(0, hashIdx);
+        const hash = href.slice(hashIdx);
+        const targetId = decodeURIComponent(hash.slice(1));
+        if (targetId) {
+          const currentPage = window.location.pathname.split("/").pop() || "index.html";
+          const linkPage = pagePart === "" ? currentPage : pagePart.split("/").pop().split("?")[0];
+          const isIndex = (p) => p === "" || p === "/" || p === "index.html";
+          if (linkPage === currentPage || (isIndex(linkPage) && isIndex(currentPage))) {
+            const target = document.getElementById(targetId);
+            if (target) {
+              e.preventDefault();
+              setNav(false);
+              // esperar a que se quite body.nav-open (overflow hidden)
+              // y el panel salga de pantalla antes de scrollear
+              setTimeout(() => {
+                target.scrollIntoView({ behavior: "smooth", block: "start" });
+                history.replaceState(null, "", hash);
+              }, 80);
+              return;
+            }
+          }
+        }
+      }
+      setNav(false);
+    }));
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") setNav(false); });
   }
   const searchToggle = document.querySelector("[data-search-toggle]");
@@ -177,5 +209,12 @@ function wireGlobalHeader() {
     b.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
     document.body.appendChild(b);
     window.addEventListener("scroll", () => b.classList.toggle("is-visible", window.scrollY > 600), { passive: true });
+  }
+  // Al llegar desde otra página con #ancla (ej. catálogo -> index.html#nosotros),
+  // reasegurar la posición exacta cuando el layout ya está listo.
+  // scroll-margin-top / scroll-padding-top del CSS evitan que el header sticky la tape.
+  if (window.location.hash) {
+    const target = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+    if (target) setTimeout(() => target.scrollIntoView({ block: "start" }), 150);
   }
 }
