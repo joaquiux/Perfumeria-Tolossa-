@@ -972,7 +972,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing:
   .toolbar { flex-direction: column; align-items: stretch; }
   .hero-ctas .btn { flex: 1; justify-content: center; }
 }
-.site-logo { max-height: 44px; max-width: 180px; object-fit: contain; mix-blend-mode: multiply; }
+.site-logo { max-height: 44px; max-width: 180px; object-fit: contain; }
+/* En fondos oscuros las letras negras se invierten a claro y se funden con el fondo */
+.main-nav .site-logo, .site-footer .site-logo, .admin-side .site-logo { filter: invert(1); }
 /* Barra superior en movimiento + cierre del menú móvil + logo */
 .utility-bar { overflow: hidden; }
 .ticker-track { display: flex; width: max-content; animation: tick 28s linear infinite; }
@@ -1009,7 +1011,8 @@ body.nav-open .site-header { z-index: 60; }
 .direccion { display: flex; align-items: center; gap: var(--sp-2); margin-top: var(--sp-4); color: var(--ink-soft); font-size: var(--fs-200); }
 .direccion svg { width: 18px; height: 18px; stroke: var(--wine); fill: none; stroke-width: 1.6; flex-shrink: 0; }
 @media (max-width: 800px) { .nosotros-grid { grid-template-columns: 1fr; } }
-.footer-brand .site-logo { max-height: 40px; }
+.footer-brand .site-logo { max-height: none; height: 64px; width: auto; max-width: 240px; }
+.footer-brand .logo { display: inline-block; margin-bottom: var(--sp-2); }
 .hero-figure img.hero-photo {
   position: relative;
   width: 72%;

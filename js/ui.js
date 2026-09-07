@@ -53,6 +53,7 @@ function renderSiteLogo() {
   const applyLogo = (src) => {
     document.querySelectorAll("a.logo").forEach((a) => {
       if (a.dataset.logoDone) return;
+      if (a.querySelector("img")) return; // ya viene inline en el HTML
       if (a.closest(".main-nav, .admin-side, .site-footer")) return;
       a.dataset.logoDone = "1";
       a.innerHTML = `<img class="site-logo" src="${src}" alt="Tolossa parfumerie">`;
