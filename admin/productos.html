@@ -39,17 +39,24 @@
 <script src="../js/config.js"></script>
 <script src="../js/data.js"></script>
 <script src="../js/store.js"></script>
+<script src="../js/cloud.js"></script>
 <script src="../js/cart.js"></script>
 <script src="../js/auth.js"></script>
 <script>
-  initStore();
-  if (!requireAdmin()) throw new Error("no auth");
-  document.querySelector("[data-logout]").addEventListener("click", logout);
-  const q = document.querySelector("[data-q]");
-  const fEstado = document.querySelector("[data-f-estado]");
-  q.addEventListener("input", render);
-  fEstado.addEventListener("change", render);
+  (async () => {
+    await initStore();
+    if (!requireAdmin()) throw new Error("no auth");
+    document.querySelector("[data-logout]").addEventListener("click", logout);
+    const q = document.querySelector("[data-q]");
+    const fEstado = document.querySelector("[data-f-estado]");
+    q.addEventListener("input", render);
+    fEstado.addEventListener("change", render);
+    render();
+    if (typeof onCatalogChange === "function") onCatalogChange(() => render());
+  })();
   function render() {
+    const q = document.querySelector("[data-q]");
+    const fEstado = document.querySelector("[data-f-estado]");
     const term = q.value.trim().toLowerCase();
     const est = fEstado.value;
     let list = getProducts();
@@ -81,16 +88,15 @@
       </tr>`;
     }).join("") : `<tr><td colspan="7">Sin productos para este filtro.</td></tr>`;
   }
-  document.querySelector("[data-rows]").addEventListener("click", (e) => {
+  document.querySelector("[data-rows]").addEventListener("click", async (e) => {
     const t = e.target.closest("[data-toggle]");
     const d = e.target.closest("[data-del]");
-    if (t) { toggleProductActive(t.dataset.toggle); render(); }
+    if (t) { await toggleProductActive(t.dataset.toggle); render(); }
     if (d) {
       const p = getProductById(d.dataset.del);
-      if (confirm(`¿Eliminar "${p ? p.nombre : d.dataset.del}"? No se puede deshacer.`)) { deleteProduct(d.dataset.del); render(); showToast("Producto eliminado"); }
+      if (confirm(`¿Eliminar "${p ? p.nombre : d.dataset.del}"? No se puede deshacer.`)) { await deleteProduct(d.dataset.del); render(); showToast("Producto eliminado"); }
     }
   });
-  render();
 </script>
 </body>
 </html>

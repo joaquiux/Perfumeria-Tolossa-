@@ -15,6 +15,7 @@
     <p style="font-family:var(--font-display);font-style:italic;color:var(--amber-deep)">Tolossa parfumerie · Privado</p>
     <h1>Ingresar</h1>
     <p class="muted">Acceso reservado. Esta página no está enlazada desde la tienda.</p>
+    <p class="muted" data-cloud-hint hidden>Conectado a la nube: usá tu email y clave de Firebase.</p>
     <label>Usuario<input name="user" autocomplete="username" required></label>
     <label>Clave<input type="password" name="pass" autocomplete="current-password" required></label>
     <p class="form-error" data-login-error hidden>Usuario o clave incorrectos.</p>
@@ -25,14 +26,23 @@
 <script src="../js/config.js"></script>
 <script src="../js/data.js"></script>
 <script src="../js/store.js"></script>
+<script src="../js/cloud.js"></script>
 <script src="../js/auth.js"></script>
 <script>
-  initStore();
-  if (isAdmin()) window.location.href = "dashboard.html";
-  document.querySelector("[data-login-form]").addEventListener("submit", (e) => {
+  (async () => {
+    await initStore();
+    if (typeof Cloud !== "undefined" && Cloud.isConfigured()) {
+      document.querySelector("[data-cloud-hint]").hidden = false;
+      document.querySelector('[name="user"]').placeholder = "tu@email.com";
+      document.querySelector('[name="user"]').type = "email";
+    }
+    if (isAdmin()) window.location.href = "dashboard.html";
+  })();
+  document.querySelector("[data-login-form]").addEventListener("submit", async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
-    if (tryLogin(fd.get("user").trim(), fd.get("pass"))) window.location.href = "dashboard.html";
+    const ok = await tryLogin(fd.get("user").trim(), fd.get("pass"));
+    if (ok) window.location.href = "dashboard.html";
     else document.querySelector("[data-login-error]").hidden = false;
   });
 </script>

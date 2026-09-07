@@ -30,6 +30,33 @@ function fileToCompressedDataURL(file, maxPx) {
     img.src = url;
   });
 }
+/* Misma compresión que fileToCompressedDataURL pero devuelve Blob,
+   listo para subir a Firebase Storage (modo nube). */
+function fileToCompressedBlob(file, maxPx) {
+  const max = maxPx || (typeof NARDO_CONFIG !== "undefined" ? NARDO_CONFIG.maxImagePx : 800);
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type.startsWith("image/")) return reject(new Error("not-image"));
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      try {
+        const scale = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(img.width * scale));
+        c.height = Math.max(1, Math.round(img.height * scale));
+        const ctx = c.getContext("2d");
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        const usePng = hasAlpha(ctx, c.width, c.height);
+        c.toBlob(
+          (blob) => { blob ? resolve(blob) : reject(new Error("encode")); },
+          usePng ? "image/png" : "image/jpeg", 0.72);
+      } catch (err) { URL.revokeObjectURL(url); reject(err); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("decode")); };
+    img.src = url;
+  });
+}
 function dataUrlKB(src) {
   if (!src) return 0;
   if (src.startsWith("data:")) {

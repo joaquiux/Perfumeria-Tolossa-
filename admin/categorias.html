@@ -56,12 +56,21 @@
 <script src="../js/config.js"></script>
 <script src="../js/data.js"></script>
 <script src="../js/store.js"></script>
+<script src="../js/cloud.js"></script>
 <script src="../js/cart.js"></script>
 <script src="../js/images.js"></script>
 <script src="../js/auth.js"></script>
 <script>
-  initStore();
-  if (!requireAdmin()) throw new Error("no auth");
+  (async () => {
+    await initStore();
+    if (!requireAdmin()) throw new Error("no auth");
+    boot();
+  })();
+  function cloudOn() {
+    try { return typeof Cloud !== "undefined" && Cloud.isConfigured() && Cloud.isReady(); }
+    catch { return false; }
+  }
+  function boot() {
   document.querySelector("[data-logout]").addEventListener("click", logout);
   document.querySelector("[data-wa]").value = getSettings().whatsapp;
   document.querySelector("[data-wa-save]").addEventListener("click", () => {
@@ -96,6 +105,14 @@
   document.querySelector("[data-cat-rows]").addEventListener("change", async (e) => {
     const inp = e.target.closest("[data-cat-img-file]");
     if (!inp || !inp.files.length) return;
+    if (cloudOn()) {
+      // Modo nube: subir a Storage y guardar la URL
+      showToast("Subiendo imagen…");
+      try { setCatImage(inp.dataset.catImgFile, await Cloud.uploadImageFile(inp.files[0], "categorias")); }
+      catch { showToast("No se pudo subir. Revisá tu sesión y conexión."); }
+      inp.value = "";
+      return;
+    }
     try { setCatImage(inp.dataset.catImgFile, await fileToCompressedDataURL(inp.files[0], 1000)); }
     catch { showToast("No se pudo procesar (¿localStorage lleno?). Probá con URL."); }
   });
@@ -146,7 +163,7 @@
     if (getProducts().some((p) => p.marca === b.dataset.brandDel)) return showToast("No se puede borrar: hay productos usándola");
     saveBrands(getBrands().filter((x) => x !== b.dataset.brandDel)); renderLists();
   });
-  document.querySelector("[data-fam-add]").addEventListener("click", () => {
+  document.querySelector("[data-fam-add]").addEventListener("click", (e) => {
     const v = document.querySelector("[data-fam-nombre]").value.trim();
     if (!v) return;
     const list = getFamilies();
@@ -173,12 +190,24 @@
   });
   document.querySelector("[data-hero-file]").addEventListener("change", async (e) => {
     if (!e.target.files.length) return;
+    if (cloudOn()) {
+      // Modo nube: subir a Storage y guardar la URL
+      showToast("Subiendo imagen…");
+      try { await saveSettings({ heroImage: await Cloud.uploadImageFile(e.target.files[0], "hero") }); renderHero(); showToast("Imagen del inicio actualizada"); }
+      catch { showToast("No se pudo subir. Revisá tu sesión y conexión."); }
+      e.target.value = "";
+      return;
+    }
     try { saveSettings({ heroImage: await fileToCompressedDataURL(e.target.files[0], 1000) }); renderHero(); showToast("Imagen del inicio actualizada"); }
     catch { showToast("No se pudo procesar (¿localStorage lleno?). Probá con URL."); }
     e.target.value = "";
   });
   document.querySelector("[data-hero-del]").addEventListener("click", () => { saveSettings({ heroImage: "" }); renderHero(); });
   renderCats(); renderLists(); renderHero();
+  if (typeof onCatalogChange === "function") {
+    onCatalogChange(() => { renderCats(); renderLists(); renderHero(); });
+  }
+  }
 </script>
 </body>
 </html>

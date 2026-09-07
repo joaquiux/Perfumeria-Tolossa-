@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aromas y fragancias — Tolossa parfumerie</title>
+<meta name="description" content="Información sobre los aromas: nuestras divisiones de esencias aromáticas y planta de envasado, y guía de notas olfativas por familia. Desarrollo de fragancias para terceros.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Sprite oculto: silueta de frasco reutilizada -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="bottle-mark" viewBox="0 0 120 160">
+    <rect x="45" y="10" width="30" height="18" rx="3" opacity="0.88"></rect>
+    <rect x="52" y="26" width="16" height="16"></rect>
+    <path d="M52,42 L68,42 L92,60 L92,145 Q92,151 86,151 L34,151 Q28,151 28,145 L28,60 Z"></path>
+  </symbol>
+</svg>
+
+<div class="utility-bar">
+  <div class="wrap">
+    <span>Envíos a todo el país</span>
+    <span>Consultá tu pedido directo por WhatsApp</span>
+    <span>Productos 100% originales</span>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="logo">Tolossa<small>parfumerie</small></a>
+
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="main-nav" id="main-nav" data-nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="catalogo.html">Perfumes</a></li>
+        <li><a href="index.html#ofertas">Ofertas</a></li>
+        <li><a href="index.html#categorias">Categorías</a></li>
+        <li><a href="index.html#nosotros">Nosotros</a></li>
+        <li><a href="aromas.html">Aromas</a></li>
+        <li><a href="index.html#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <button type="button" data-search-toggle aria-expanded="false" aria-controls="search-panel">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.2" y2="16.2"></line></svg>
+        <span class="label-text">Buscar</span>
+      </button>
+      <a href="carrito.html" class="cart-link" aria-label="Ver carrito">
+        <svg viewBox="0 0 24 24"><path d="M6 8h12l-1.2 11.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>
+        <span class="visually-hidden">Carrito</span>
+        <span class="cart-count" data-cart-count hidden>0</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="search-panel" id="search-panel" data-search-panel>
+    <form data-search-form>
+      <input type="search" name="q" placeholder="Buscar por marca, nombre o familia olfativa…" autocomplete="off">
+      <button type="submit">Buscar</button>
+    </form>
+  </div>
+</header>
+
+<main>
+
+  <!-- mini-barra deslizable con los apartados de la página -->
+  <nav class="mini-bar" aria-label="Apartados de aromas">
+    <div class="wrap mini-bar-track">
+      <a href="#divisiones">Divisiones</a>
+      <a href="#notas">Notas olfativas</a>
+      <a href="#descubri">Descubrí más</a>
+      <a href="fragancias.html#tecnicas">Frag. técnicas</a>
+      <a href="fragancias.html#finas">Frag. finas</a>
+    </div>
+  </nav>
+
+  <!-- ================= HERO ================= -->
+  <section class="page-head">
+    <div class="wrap">
+      <p class="kicker" style="font-family:var(--font-display);font-style:italic;color:var(--amber-deep)">Información sobre los aromas</p>
+      <h1>El mundo de los aromas</h1>
+      <p>Más que vender perfumes, los creamos. Te mostramos cómo trabajamos, qué notas empleamos y cómo desarrollar una fragancia para tu marca.</p>
+    </div>
+  </section>
+
+  <!-- ================= DIVISIONES ================= -->
+  <!-- EDITABLE: textos de las divisiones -->
+  <section class="section" id="divisiones">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Nuestras divisiones</p>
+          <h2>Dos maneras de abordar el aroma</h2>
+        </div>
+      </div>
+      <!-- EDITABLE: el lenguaje de los aromas -->
+      <div class="aroma-lenguaje">
+        <p class="kicker">El lenguaje de los aromas</p>
+        <p class="lede">Los aromas tienen una manera única de despertar los sentidos. Pueden evocar un recuerdo, transmitir una emoción o transformar por completo la presencia de quien los lleva.</p>
+        <p>Un perfume puede sentirse fresco y luminoso, cálido y envolvente, intenso y profundo, delicado y sutil. Cada aroma tiene su propia personalidad y encuentra distintas formas de acompañarnos a lo largo del día.</p>
+        <p>Hay fragancias que despiertan con una sensación de frescura y energía, otras que envuelven con una calidez elegante y algunas que dejan tras de sí una presencia profunda, sofisticada e inolvidable.</p>
+        <p>Explorar un perfume es descubrir una experiencia. Es encontrar ese aroma que encaja con un momento, una ocasión o simplemente con la forma en la que queremos sentirnos.</p>
+        <p>Porque los aromas no solo acompañan nuestra piel: <strong>forman parte de nuestra identidad, de nuestros recuerdos y de la impresión que dejamos en los demás.</strong></p>
+        <p><strong>Un aroma puede decir más de lo que imaginás.</strong></p>
+        <a class="btn btn-secondary" href="catalogo.html">Descubrí una fragancia que hable de vos</a>
+      </div>
+      <p class="rail-label">Deslizá para descubrir más</p>
+      <div class="rail rail--aromas">
+        <article class="aroma-card">
+          <p class="kicker">Esencias aromáticas</p>
+          <h3>Fragancias diseñadas a medida</h3>
+          <p>Creamos y elaboramos esencias pensadas para tu marca, de la idea a la fórmula definitiva.</p>
+          <div class="aroma-sub">
+            <h4>Fragancias técnicas</h4>
+            <p>Fórmulas de alto desempeño para limpieza, cosmética, velas, sahumerios, textiles y difusores: estabilidad y fijación comprobadas en cada base.</p>
+          </div>
+          <div class="aroma-sub">
+            <h4>Fragancias finas</h4>
+            <p>Alta perfumería y creaciones de autor para marcas que buscan un sello olfativo propio y exclusivo.</p>
+          </div>
+        </article>
+        <article class="aroma-card">
+          <p class="kicker">Planta de elaboración y envasado</p>
+          <h3>¿Qué hacemos y cómo?</h3>
+          <p>Elaboramos y envasamos cosmética, perfumería, domisanitarios y velas con control de calidad lote por lote.</p>
+          <div class="aroma-sub">
+            <h4>Acompañamiento integral</h4>
+            <p>Nos compartís tu idea —o traés tu fórmula— y te guiamos del desarrollo al frasco listo para vender.</p>
+          </div>
+          <a class="btn btn-primary" data-wa-link data-wa-text="Hola! Quiero consultar por un desarrollo de fragancia para mi marca." href="https://wa.me/5493834045628" target="_blank" rel="noopener">Consultar un desarrollo</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= NOTAS OLFATIVAS ================= -->
+  <!-- EDITABLE: familias y notas -->
+  <section class="section section--notas" id="notas">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Guía de notas</p>
+          <h2>El mapa de las familias olfativas</h2>
+        </div>
+        <p>Todo perfume se construye con notas. Estas son las familias que trabajamos y varias de sus notas más emblemáticas.</p>
+      </div>
+      <div class="family-grid">
+        <article class="family-card">
+          <h3>Cítricas</h3>
+          <p>Brindan frescura, luminosidad y una apertura chispeante. Son lo primero que se percibe.</p>
+          <ul class="note-list">
+            <li><strong>Bergamota</strong> — vibrante y refinada, la soberana de las aperturas.</li>
+            <li><strong>Limón</strong> — destello instantáneo, pulcritud absoluta.</li>
+            <li><strong>Mandarina</strong> — melosa y serena.</li>
+            <li><strong>Naranja amarga</strong> — herbal y distinguida.</li>
+            <li><strong>Pomelo</strong> — tonificante, entre lo dulce y lo amargo.</li>
+            <li><strong>Lima</strong> — cítrica y enérgica.</li>
+            <li><strong>Yuzu</strong> — cítrico nipón, singular y radiante.</li>
+            <li><strong>Verbena</strong> — verde-cítrica, sumamente vivificante.</li>
+          </ul>
+        </article>
+        <article class="family-card">
+          <h3>Florales</h3>
+          <p>El alma de la perfumería: distinción, romanticismo y temperamento.</p>
+          <ul class="note-list">
+            <li><strong>Rosa damascena</strong> — la flor insignia, honda y aterciopelada.</li>
+            <li><strong>Jazmín sambac</strong> — seductor, magnético, nocturnal.</li>
+            <li><strong>Nerolí</strong> — azahar fresco, radiante y apacible.</li>
+            <li><strong>Flor de azahar</strong> — alba y luminosa.</li>
+            <li><strong>Ylang-ylang</strong> — tropical, untuoso, hipnótico.</li>
+            <li><strong>Nardo</strong> — potente y tenaz, de enorme presencia.</li>
+            <li><strong>Lavanda</strong> — pura y calma, también muy varonil.</li>
+            <li><strong>Peonía</strong> — delicada, lozana y contemporánea.</li>
+          </ul>
+        </article>
+        <article class="family-card">
+          <h3>Amaderadas</h3>
+          <p>Brindan sostén y permanencia al fondo, con impronta terrosa o distinguida.</p>
+          <ul class="note-list">
+            <li><strong>Sándalo</strong> — untuoso y contemplativo.</li>
+            <li><strong>Cedro</strong> — áspero y noble, como mina recién afilada.</li>
+            <li><strong>Pachulí</strong> — telúrico y hondo, sello de los orientales.</li>
+            <li><strong>Vetiver</strong> — herbal, ahumado y bien masculino.</li>
+            <li><strong>Oud</strong> — resina potente y opulenta, el oro negro.</li>
+            <li><strong>Guayaco</strong> — ahumado y enigmático.</li>
+            <li><strong>Cashmeran</strong> — almizcle leñoso, abrazo tenue.</li>
+            <li><strong>Pino</strong> — bosque lozano y balsámico.</li>
+          </ul>
+        </article>
+        <article class="family-card">
+          <h3>Especiadas</h3>
+          <p>Enigma, travesura y calidez: las que avivan una fragancia.</p>
+          <ul class="note-list">
+            <li><strong>Canela</strong> — ardiente y atractiva.</li>
+            <li><strong>Clavo de olor</strong> — penetrante, oriental.</li>
+            <li><strong>Pimienta negra</strong> — destello picante en la apertura.</li>
+            <li><strong>Pimienta rosa</strong> — lozana y actual.</li>
+            <li><strong>Cardamomo</strong> — verde especiado, rúbrica nicho.</li>
+            <li><strong>Nuez moscada</strong> — acogedora y varonil.</li>
+            <li><strong>Azafrán</strong> — cuero, especia y opulencia.</li>
+            <li><strong>Vainilla</strong> — melosa y cautivante, la predilecta.</li>
+            <li><strong>Haba tonka</strong> — de almendra, tabaco amelado.</li>
+            <li><strong>Jengibre</strong> — vigorizante y lozano.</li>
+          </ul>
+        </article>
+        <article class="family-card">
+          <h3>Resinosas y balsámicas</h3>
+          <p>Fijación suprema: tibieza, misticismo y hondura.</p>
+          <ul class="note-list">
+            <li><strong>Incienso</strong> — contemplativo y ritual.</li>
+            <li><strong>Mirra</strong> — esotérica y cautivante.</li>
+            <li><strong>Benjuí</strong> — bálsamo dulce que todo lo redondea.</li>
+            <li><strong>Ládano</strong> — cimiento del acorde ambarado.</li>
+            <li><strong>Bálsamo del Perú</strong> — vainillado y perdurable.</li>
+            <li><strong>Ámbar gris</strong> — mineral e hipnótico, asienta el conjunto.</li>
+            <li><strong>Elemí</strong> — resinoso-cítrico, lozano y singular.</li>
+          </ul>
+        </article>
+        <article class="family-card">
+          <h3>Gourmand</h3>
+          <p>Acentos comestibles y melosos que provocan antojo y abrigo.</p>
+          <ul class="note-list">
+            <li><strong>Caramelo</strong> — tostado dulce, irresistible.</li>
+            <li><strong>Chocolate</strong> — negro y glotón.</li>
+            <li><strong>Café</strong> — torrado y estimulante.</li>
+            <li><strong>Miel</strong> — áurea y acogedora.</li>
+            <li><strong>Coco</strong> — exótico y untuoso.</li>
+            <li><strong>Praliné</strong> — avellana melosa, abrigo puro.</li>
+            <li><strong>Ron</strong> — espirituoso y nocturnal.</li>
+            <li><strong>Almendra</strong> — mazapán sutil.</li>
+          </ul>
+        </article>
+        <article class="family-card">
+          <h3>Frutales</h3>
+          <p>Jugo y lozanía con dulzor innato.</p>
+          <ul class="note-list">
+            <li><strong>Higo</strong> — verde y lácteo, sin igual.</li>
+            <li><strong>Durazno</strong> — suculento y afelpado.</li>
+            <li><strong>Manzana verde</strong> — acerba y lozana.</li>
+            <li><strong>Cereza</strong> — tenebrosa y atractiva.</li>
+            <li><strong>Frambuesa</strong> — agreste y palpitante.</li>
+            <li><strong>Pera</strong> — suculenta y radiante.</li>
+            <li><strong>Piña</strong> — exótica con temperamento.</li>
+            <li><strong>Mango</strong> — sazonado y tropical.</li>
+          </ul>
+        </article>
+        <article class="family-card">
+          <h3>Verdes y almizcles</h3>
+          <p>Del verdor herbal a la pulcritud total y el cuero indómito.</p>
+          <ul class="note-list">
+            <li><strong>Menta</strong> — vivificante y franca.</li>
+            <li><strong>Romero</strong> — aromático y denso.</li>
+            <li><strong>Té verde</strong> — sereno y esencial.</li>
+            <li><strong>Musgo de roble</strong> — cimiento de los clásicos de barbero.</li>
+            <li><strong>Tabaco</strong> — dulzor, cuero y nocturnidad.</li>
+            <li><strong>Cuero</strong> — indómito y distinguido.</li>
+            <li><strong>Almizcle blanco</strong> — efecto limpio, segunda piel.</li>
+            <li><strong>Sal marina</strong> — mineral, hálito oceánico.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DESCUBRÍ MÁS ================= -->
+  <section class="section" id="descubri">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Descubrí más</p>
+          <h2>Adentrate en cada fragancia</h2>
+        </div>
+        <p>Dos universos, dos maneras de crear: descubrilos a fondo.</p>
+      </div>
+      <div class="discover-grid">
+        <a class="discover-card" href="fragancias.html#tecnicas">
+          <p class="kicker">Fragancias técnicas</p>
+          <h3>Máximo desempeño en cada base</h3>
+          <p>Cómo componemos para limpieza, cosmética, velas y más: matrices, fórmulas y ficha técnica.</p>
+          <span class="section-link">Explorar →</span>
+        </a>
+        <a class="discover-card" href="fragancias.html#finas">
+          <p class="kicker">Fragancias finas</p>
+          <h3>Creación de autor</h3>
+          <p>Sello olfativo exclusivo para tu marca: del concepto al frasco, etapa por etapa.</p>
+          <span class="section-link">Explorar →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">Tolossa<small>parfumerie</small></a>
+      <p>Tolossa parfumerie. Fragancias auténticas de grandes casas, del mundo árabe y de sellos nicho, curadas una por una.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Tienda</h4>
+      <ul>
+        <li><a href="catalogo.html">Perfumes</a></li>
+        <li><a href="index.html#ofertas">Ofertas</a></li>
+        <li><a href="index.html#categorias">Categorías</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Conocé más</h4>
+      <ul>
+        <li><a href="aromas.html">Aromas</a></li>
+        <li><a href="fragancias.html#tecnicas">Fragancias técnicas</a></li>
+        <li><a href="fragancias.html#finas">Fragancias finas</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <ul>
+        <li><a data-wa-link href="https://wa.me/5493834045628" target="_blank" rel="noopener">WhatsApp</a></li>
+        <li><a href="https://www.instagram.com/tolossaparfumerie/" target="_blank" rel="noopener">Instagram</a></li>
+        <li>San Fernando del Valle, Ayacucho 842</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>© <span data-year></span> Tolossa parfumerie. Todos los derechos reservados.</span>
+    <span class="watermark">Tolossa Lab. © | Niche Fragrances.</span>
+  </div>
+</footer>
+
+<div class="toast" data-toast></div>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/cloud.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  (async () => {
+    await initStore();
+    updateCartBadge();
+    wireGlobalHeader();
+  })();
+</script>
+</body>
+</html>

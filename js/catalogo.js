@@ -1,12 +1,14 @@
 /* NARDO — catalogo.js: buscar / filtrar / ordenar / paginar */
-document.addEventListener("DOMContentLoaded", () => {
-  initStore();
+document.addEventListener("DOMContentLoaded", async () => {
+  await initStore();
   updateCartBadge();
   wireGlobalHeader();
   fillFilterOptions();
   syncUIFromURL();
   bindFilterEvents();
   render();
+  // En vivo: re-render ante cambios del admin (nube)
+  if (typeof onCatalogChange === "function") onCatalogChange(() => render());
 });
 
 function getStateFromURL() {
@@ -146,7 +148,7 @@ function render() {
   // validación rango de precio (Bloque C)
   if (s.min != null && s.max != null && s.min > s.max) {
     document.querySelector("[data-grid]").innerHTML =
-      `<div class="empty-state"><h3>Rango de precio inválido</h3><p>El mínimo es mayor que el máximo.</p><a class="btn btn-secondary" href="catalogo.html">Limpiar filtros</a></div>`;
+      `<div class="empty-state"><h3>Rango inválido</h3><p>El mínimo supera al máximo.</p><a class="btn btn-secondary" href="catalogo.html">Limpiar filtros</a></div>`;
     document.querySelector("[data-result-count]").textContent = "Sin resultados";
     document.querySelector("[data-chips]").innerHTML = "";
     document.querySelector("[data-pagination]").innerHTML = "";
@@ -159,11 +161,11 @@ function render() {
   const slice = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   document.querySelector("[data-result-count]").textContent =
-    filtered.length === 0 ? "Sin resultados" : `${filtered.length} perfume${filtered.length !== 1 ? "s" : ""}`;
+    filtered.length === 0 ? "Sin resultados" : `${filtered.length} fragancia${filtered.length !== 1 ? "s" : ""}`;
 
   document.querySelector("[data-grid]").innerHTML = slice.length
     ? slice.map(productCard).join("")
-    : `<div class="empty-state"><h3>Sin resultados</h3><p>No encontramos nada con esos filtros. Probá con otra marca o quitá algún filtro.</p><a class="btn btn-secondary" href="catalogo.html">Limpiar filtros</a></div>`;
+    : `<div class="empty-state"><h3>Sin resultados</h3><p>Nada coincide con esos filtros. Probá otra marca o sacá algún filtro.</p><a class="btn btn-secondary" href="catalogo.html">Limpiar filtros</a></div>`;
 
   const chips = [];
   if (s.q) chips.push(["q", `Búsqueda: ${s.q}`]);

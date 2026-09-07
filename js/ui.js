@@ -1,4 +1,5 @@
 /* NARDO — ui.js: tarjeta unificada + header global */
+try { document.documentElement.classList.add("js"); } catch {}
 function productImage(p, cls = "product-bottle") {
   if (p.imagenPrincipal) {
     return `<img class="${cls} product-photo" src="${escapeHTML(p.imagenPrincipal)}" alt="${escapeHTML(p.marca + " " + p.nombre)}" loading="lazy" onerror="this.outerHTML=bottleSVG('${escapeHTML(p.tono)}','${cls}')">`;
@@ -42,20 +43,29 @@ function productCard(p) {
       </div>
     </article>`;
 }
-/* El logo lo sube el dueño como archivo en assets/logo.png (no hay subida en el admin).
-   Si el archivo no existe, queda el nombre en texto. */
+/* El logo lo sube el dueño como archivo en assets/logo.png (o .jpg).
+   Si el archivo no existe, queda el nombre en texto.
+   En fondos oscuros (menú móvil, footer, admin) se mantiene el texto
+   para que siempre se lea bien. */
 function renderSiteLogo() {
   const base = window.location.pathname.includes("/admin/") ? "../" : "";
-  const src = base + "assets/logo.png";
-  const probe = new Image();
-  probe.onload = () => {
+  const candidates = [base + "assets/logo.png", base + "assets/logo.jpg"];
+  const applyLogo = (src) => {
     document.querySelectorAll("a.logo").forEach((a) => {
       if (a.dataset.logoDone) return;
+      if (a.closest(".main-nav, .admin-side, .site-footer")) return;
       a.dataset.logoDone = "1";
-      a.innerHTML = `<img class="site-logo" src="${src}" alt="Logo">`;
+      a.innerHTML = `<img class="site-logo" src="${src}" alt="Tolossa parfumerie">`;
     });
   };
-  probe.src = src;
+  const tryNext = (i) => {
+    if (i >= candidates.length) return;
+    const probe = new Image();
+    probe.onload = () => applyLogo(candidates[i]);
+    probe.onerror = () => tryNext(i + 1);
+    probe.src = candidates[i];
+  };
+  tryNext(0);
 }
 /* Hero del inicio: el admin lo cambia desde Categorías. Si hay imagen,
    reemplaza las botellitas; si no, queda la ilustración original. */
@@ -199,9 +209,20 @@ function wireGlobalHeader() {
     bar.innerHTML = "";
     bar.appendChild(track);
   });
+  // reveal on scroll: aparición suave de bloques al entrar en pantalla
+  try {
+    const els = document.querySelectorAll(".section-head, .page-head .wrap, .hero-copy, .hero-figure, .contacto-grid, .nosotros-grid, .family-card, .aroma-card, .discover-card, .tech-mini-grid article, .steps li, .beneficio");
+    if (els.length && "IntersectionObserver" in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) { en.target.classList.add("is-visible"); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.1 });
+      els.forEach((el) => { el.classList.add("reveal"); io.observe(el); });
+    }
+  } catch {}
   // volver arriba (Bloque C)
-  if (!document.querySelector("[data-to-top]")) {
-    const b = document.createElement("button");
+  if (!document.querySelector("[data-to-top]")) {    const b = document.createElement("button");
     b.className = "to-top";
     b.setAttribute("data-to-top", "");
     b.setAttribute("aria-label", "Volver arriba");

@@ -1,6 +1,6 @@
 /* NARDO — producto.js: ficha + galería + relacionados */
-document.addEventListener("DOMContentLoaded", () => {
-  initStore();
+document.addEventListener("DOMContentLoaded", async () => {
+  await initStore();
   updateCartBadge();
   wireGlobalHeader();
   const box = document.querySelector("[data-product-detail]");
@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const rel = document.querySelector("[data-related]");
   if (rel) rel.innerHTML = skeletonCards(4);
   requestAnimationFrame(() => setTimeout(renderDetail, 250));
+  // En vivo: re-render ante cambios del admin (nube)
+  if (typeof onCatalogChange === "function") onCatalogChange(() => renderDetail());
 });
 function currentId() { return new URLSearchParams(window.location.search).get("id"); }
 function allImages(p) {
@@ -18,7 +20,7 @@ function renderDetail() {
   const box = document.querySelector("[data-product-detail]");
   const p = getProductById(currentId());
   if (!p || !p.activo) {
-    box.innerHTML = `<div class="empty-state"><h3>Producto no encontrado</h3><p>Puede estar desactivado o el link es incorrecto.</p><a class="btn btn-secondary" href="catalogo.html">Volver al catálogo</a></div>`;
+    box.innerHTML = `<div class="empty-state"><h3>No encontramos el producto</h3><p>Puede estar oculto o el enlace es incorrecto.</p><a class="btn btn-secondary" href="catalogo.html">Volver al catálogo</a></div>`;
     document.querySelector("[data-related]").innerHTML = "";
     return;
   }

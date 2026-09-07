@@ -60,7 +60,7 @@
 /* ---------- Reset ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; }
-html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+html { scroll-behavior: smooth; scroll-padding-top: 122px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
@@ -343,8 +343,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing:
   font-size: var(--fs-200);
   border: 1px solid var(--ink);
   border-radius: var(--radius-sm);
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
+.btn:hover { transform: translateY(-1px); }
+.btn-primary:hover { box-shadow: 0 8px 18px rgba(23, 20, 15, 0.22); }
 .btn-primary { background: var(--ink); color: var(--paper); }
 .btn-primary:hover { background: var(--amber-deep); border-color: var(--amber-deep); }
 .btn-secondary { background: transparent; color: var(--ink); }
@@ -380,6 +382,11 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing:
   position: relative;
   width: 46%;
   filter: drop-shadow(0 18px 30px rgba(23, 20, 15, 0.18));
+  animation: floaty 7s ease-in-out infinite;
+}
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 @media (max-width: 900px) {
@@ -525,6 +532,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing:
   overflow-x: auto;
   padding-bottom: var(--sp-3);
   scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--sp-4);
 }
 .rail > * { scroll-snap-align: start; }
 .rail::-webkit-scrollbar { height: 6px; }
@@ -534,6 +542,189 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing:
 .section--ofertas .section-head p { color: rgba(239, 231, 216, 0.65); }
 .section--ofertas .section-link { border-color: var(--paper-soft); }
 .section--ofertas .section-link:hover { color: var(--amber); border-color: var(--amber); }
+/* ============================================================
+   Aromas — información + slide-bar de divisiones
+   ============================================================ */
+.section--aromas { background: var(--paper-soft); }
+.section--aromas .kicker {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--wine);
+  letter-spacing: 0.08em;
+  margin-bottom: var(--sp-3);
+}
+.section--aromas .section-head h2 { font-size: var(--fs-600); max-width: 16ch; }
+.rail-label {
+  font-size: var(--fs-200);
+  color: var(--ink-soft);
+  margin-bottom: var(--sp-4);
+}
+.rail--aromas { grid-auto-columns: minmax(300px, 360px); }
+.aroma-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.aroma-card h3 { font-size: var(--fs-500); line-height: 1.15; }
+.aroma-card > p { color: var(--ink-soft); font-size: var(--fs-200); }
+.aroma-sub { border-top: 1px solid var(--line); padding-top: var(--sp-4); }
+.aroma-sub h4 { font-size: var(--fs-300); margin-bottom: var(--sp-2); }
+.aroma-sub p { color: var(--ink-soft); font-size: var(--fs-200); }
+.aroma-card .btn { margin-top: auto; align-self: flex-start; }
+/* El lenguaje de los aromas — bloque editorial */
+.aroma-lenguaje { max-width: 76ch; margin-bottom: var(--sp-6); }
+.aroma-lenguaje .kicker {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--wine);
+  letter-spacing: 0.08em;
+  margin-bottom: var(--sp-3);
+}
+.aroma-lenguaje p { color: var(--ink-soft); margin-bottom: var(--sp-4); }
+.aroma-lenguaje p.lede {
+  font-family: var(--font-display);
+  font-size: var(--fs-400);
+  line-height: 1.5;
+  color: var(--ink);
+}
+.aroma-lenguaje strong { color: var(--ink); }
+.aroma-lenguaje .btn { margin-top: var(--sp-2); }
+@media (max-width: 700px) { .rail--aromas { grid-auto-columns: minmax(240px, 85%); } }
+/* ============================================================
+   Aromas / Fragancias — familias, descubrí más y detalle
+   ============================================================ */
+.section--notas { background: var(--paper-deep); }
+.family-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-5);
+}
+.family-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-6);
+}
+.family-card h3 { font-size: var(--fs-500); margin-bottom: var(--sp-2); }
+.family-card > p { color: var(--ink-soft); font-size: var(--fs-200); margin-bottom: var(--sp-4); }
+.note-list { display: flex; flex-direction: column; gap: var(--sp-2); }
+.note-list li { font-size: var(--fs-200); color: var(--ink-soft); }
+.note-list strong { color: var(--ink); font-weight: 600; }
+.discover-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-5);
+}
+.discover-card {
+  background: var(--ink);
+  color: var(--paper-soft);
+  border-radius: var(--radius-md);
+  padding: var(--sp-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  transition: transform 0.2s ease;
+}
+.discover-card:hover { transform: translateY(-4px); }
+.discover-card .kicker {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--amber);
+  letter-spacing: 0.08em;
+}
+.discover-card h3 { font-size: var(--fs-500); }
+.discover-card p { color: rgba(239, 231, 216, 0.75); font-size: var(--fs-200); }
+.discover-card .section-link {
+  align-self: flex-start;
+  margin-top: var(--sp-2);
+  color: var(--paper-soft);
+  border-color: var(--paper-soft);
+}
+.tech-intro p { color: var(--ink-soft); max-width: 72ch; margin-bottom: var(--sp-6); }
+.sub-title { font-size: var(--fs-400); margin: var(--sp-7) 0 var(--sp-4); }
+.matrix-chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.matrix-chips span {
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.5em 0.9em;
+  font-size: var(--fs-200);
+}
+.formula-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-5);
+}
+.tech-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-4);
+}
+.tech-mini-grid article {
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-4);
+}
+.tech-mini-grid h4 { font-size: var(--fs-200); margin-bottom: var(--sp-2); }
+.tech-mini-grid p { font-size: var(--fs-100); color: var(--ink-soft); }
+.section--finas { background: var(--paper-deep); }
+.steps { display: flex; flex-direction: column; gap: var(--sp-4); counter-reset: step; }
+.steps li {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-5) var(--sp-6);
+  list-style: none;
+}
+.steps strong { font-family: var(--font-display); font-size: var(--fs-400); display: block; margin-bottom: var(--sp-1); }
+.steps p { color: var(--ink-soft); font-size: var(--fs-200); }
+.cta-row { display: flex; gap: var(--sp-4); flex-wrap: wrap; margin-top: var(--sp-7); }
+@media (max-width: 900px) {
+  .family-grid, .discover-grid, .formula-grid { grid-template-columns: 1fr; }
+  .tech-mini-grid { grid-template-columns: repeat(2, 1fr); }
+}
+/* Mini-barra deslizable de apartados (aromas) */
+.mini-bar {
+  position: sticky;
+  top: 66px;
+  z-index: 30;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+.mini-bar-track {
+  display: flex;
+  gap: var(--sp-2);
+  overflow-x: auto;
+  padding-block: var(--sp-2);
+}
+.mini-bar-track a {
+  white-space: nowrap;
+  font-size: var(--fs-200);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 0.35em 0.9em;
+}
+.mini-bar-track a:hover { border-color: var(--amber-deep); color: var(--amber-deep); }
+@media (max-width: 700px) { .mini-bar { top: 57px; } }
+/* ============================================================
+   Transiciones — reveal on scroll + hovers de tarjetas
+   ============================================================ */
+.js .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.js .reveal.is-visible { opacity: 1; transform: none; }
+.aroma-card, .family-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.aroma-card:hover, .family-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(23, 20, 15, 0.12); }
+.mini-bar-track a { transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease; }
+.mini-bar-track a:hover { background: var(--paper-soft); }
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .hero-figure svg.bottle-hero { animation: none; }
+  .aroma-card, .family-card, .btn { transition: none; }
+}
 
 /* ============================================================
    Destacados — grilla
@@ -630,8 +821,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing:
   border-bottom: 1px solid var(--line-strong);
   font-size: var(--fs-400);
   font-family: var(--font-display);
+  transition: color 0.2s ease, transform 0.2s ease;
 }
-.social-list a:hover { color: var(--amber-deep); }
+.social-list a:hover { color: var(--amber-deep); transform: translateX(4px); }
 .social-list svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.4; }
 
 @media (max-width: 800px) {
@@ -780,7 +972,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing:
   .toolbar { flex-direction: column; align-items: stretch; }
   .hero-ctas .btn { flex: 1; justify-content: center; }
 }
-.site-logo { max-height: 44px; max-width: 180px; object-fit: contain; }
+.site-logo { max-height: 44px; max-width: 180px; object-fit: contain; mix-blend-mode: multiply; }
 /* Barra superior en movimiento + cierre del menú móvil + logo */
 .utility-bar { overflow: hidden; }
 .ticker-track { display: flex; width: max-content; animation: tick 28s linear infinite; }
@@ -798,6 +990,9 @@ body.nav-open { overflow: hidden; }
 body.nav-open .site-header { z-index: 60; }
 @media (max-width: 900px) {
   .nav-close { display: block; position: absolute; top: var(--sp-4); right: var(--sp-5); color: var(--paper-soft); font-size: 2rem; line-height: 1; padding: var(--sp-2); }
+  /* blancos táctiles amplios en el menú móvil */
+  .main-nav ul { gap: 0; }
+  .main-nav a { display: block; padding: 0.7em 0; }
 }
 @media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
 /* Logo Tolossa parfumerie */
@@ -845,8 +1040,9 @@ body.nav-open .site-header { z-index: 60; }
   .search-panel.is-open { max-height: 160px; }
   .search-panel input { flex: 1 1 100%; }
   .section { padding-block: var(--sp-7); }
-  .section-head { flex-wrap: wrap; }
+  .section-head { flex-wrap: wrap; gap: var(--sp-3); }
   .section-head p { max-width: 100%; }
+  .section-head h2, .nosotros-grid h2, .contacto-copy h2 { font-size: var(--fs-500); }
   /* iOS hace zoom si el input tiene menos de 16px */
   input, select, textarea { font-size: 16px; }
   .thumbs { overflow-x: auto; padding-bottom: 4px; }

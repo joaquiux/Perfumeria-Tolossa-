@@ -31,35 +31,61 @@
     <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Producto</th><th>Consultas</th><th>Precio</th></tr></thead><tbody data-top></tbody></table></div>
   </main>
 </div>
+<div class="toast" data-toast></div>
 <script src="../js/config.js"></script>
 <script src="../js/data.js"></script>
 <script src="../js/store.js"></script>
+<script src="../js/cloud.js"></script>
+<script src="../js/cart.js"></script>
 <script src="../js/auth.js"></script>
 <script>
-  initStore();
-  if (!requireAdmin()) throw new Error("no auth");
-  document.querySelector("[data-admin-user]").textContent = "Sesión: " + NARDO_CONFIG.adminUser;
-  document.querySelector("[data-logout]").addEventListener("click", logout);
-  const all = getProducts();
-  const sinStock = all.filter((p) => p.stock <= 0);
-  const poco = all.filter((p) => p.stock > 0 && p.stock <= p.stockMinimo);
-  const stats = [
-    ["Total productos", all.length, ""],
-    ["Sin stock", sinStock.length, sinStock.length ? "alert" : ""],
-    ["Poco stock", poco.length, poco.length ? "warn" : ""],
-    ["Ofertas", all.filter((p) => p.oferta && p.activo).length, ""],
-    ["Destacados", all.filter((p) => p.destacado && p.activo).length, ""],
-    ["Nuevos", all.filter((p) => p.nuevo && p.activo).length, ""],
-  ];
-  document.querySelector("[data-stats]").innerHTML = stats.map(([l, n, c]) =>
-    `<div class="stat ${c}"><div class="num">${n}</div><div class="lbl">${l}</div></div>`).join("");
-  const alerts = [...sinStock, ...poco];
-  document.querySelector("[data-alerts]").innerHTML = alerts.length
-    ? alerts.map((p) => { const e = stockEstado(p);
-      return `<tr><td>${escapeHTML(p.marca)} ${escapeHTML(p.nombre)}</td><td>${e.label}</td><td>${p.stock}</td><td><a class="btn-sm" href="producto-form.html?id=${p.id}">Editar</a></td></tr>`; }).join("")
-    : `<tr><td colspan="4">Sin alertas. Todo con stock suficiente.</td></tr>`;
-  document.querySelector("[data-top]").innerHTML = [...all].sort((a, b) => b.vendidos - a.vendidos).slice(0, 5)
-    .map((p) => `<tr><td>${escapeHTML(p.marca)} ${escapeHTML(p.nombre)}</td><td>${p.vendidos}</td><td>${formatARS(p.precio)}</td></tr>`).join("");
+  (async () => {
+    await initStore();
+    if (!requireAdmin()) throw new Error("no auth");
+    document.querySelector("[data-admin-user]").textContent = adminLabel();
+    document.querySelector("[data-logout]").addEventListener("click", logout);
+    // Migración inicial silenciosa (una sola vez): si la nube está vacía,
+    // se publica lo actual. Después, todo sale con cada Guardar.
+    try {
+      if (typeof Cloud !== "undefined" && Cloud.isConfigured() && Cloud.isReady()
+          && !localStorage.getItem("nardo_cloud_migrated")) {
+        const snap = await Cloud.pullAll();
+        if (!snap || !snap.products) {
+          await Cloud.pushAll({
+            products: getProducts(),
+            taxonomies: { categories: getCategories(), brands: getBrands(), families: getFamilies() },
+            settings: getSettings(),
+          });
+          showToast("Catálogo publicado en la nube");
+        }
+        localStorage.setItem("nardo_cloud_migrated", "1");
+      }
+    } catch (e) { console.warn("[nardo] migración:", e); }
+    renderAll();
+    if (typeof onCatalogChange === "function") onCatalogChange(() => renderAll());
+  })();
+  function renderAll() {
+    const all = getProducts();
+    const sinStock = all.filter((p) => p.stock <= 0);
+    const poco = all.filter((p) => p.stock > 0 && p.stock <= p.stockMinimo);
+    const stats = [
+      ["Total productos", all.length, ""],
+      ["Sin stock", sinStock.length, sinStock.length ? "alert" : ""],
+      ["Poco stock", poco.length, poco.length ? "warn" : ""],
+      ["Ofertas", all.filter((p) => p.oferta && p.activo).length, ""],
+      ["Destacados", all.filter((p) => p.destacado && p.activo).length, ""],
+      ["Nuevos", all.filter((p) => p.nuevo && p.activo).length, ""],
+    ];
+    document.querySelector("[data-stats]").innerHTML = stats.map(([l, n, c]) =>
+      `<div class="stat ${c}"><div class="num">${n}</div><div class="lbl">${l}</div></div>`).join("");
+    const alerts = [...sinStock, ...poco];
+    document.querySelector("[data-alerts]").innerHTML = alerts.length
+      ? alerts.map((p) => { const e = stockEstado(p);
+        return `<tr><td>${escapeHTML(p.marca)} ${escapeHTML(p.nombre)}</td><td>${e.label}</td><td>${p.stock}</td><td><a class="btn-sm" href="producto-form.html?id=${p.id}">Editar</a></td></tr>`; }).join("")
+      : `<tr><td colspan="4">Sin alertas. Todo con stock suficiente.</td></tr>`;
+    document.querySelector("[data-top]").innerHTML = [...all].sort((a, b) => b.vendidos - a.vendidos).slice(0, 5)
+      .map((p) => `<tr><td>${escapeHTML(p.marca)} ${escapeHTML(p.nombre)}</td><td>${p.vendidos}</td><td>${formatARS(p.precio)}</td></tr>`).join("");
+  }
 </script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 /* NARDO — home.js */
-document.addEventListener("DOMContentLoaded", () => {
-  initStore();
+document.addEventListener("DOMContentLoaded", async () => {
+  await initStore();
   updateCartBadge();
   wireGlobalHeader();
   // skeletons Bloque C: feedback inmediato mientras se arma el contenido
@@ -14,6 +14,15 @@ document.addEventListener("DOMContentLoaded", () => {
     renderDestacados();
     renderMarcas();
   }, 250));
+  // En vivo: si el admin cambia algo (nube), re-render sin recargar
+  if (typeof onCatalogChange === "function") {
+    onCatalogChange(() => {
+      renderCategorias();
+      renderOfertas();
+      renderDestacados();
+      renderMarcas();
+    });
+  }
 });
 function renderCategorias() {
   const track = document.querySelector("[data-categorias]");
@@ -31,7 +40,7 @@ function renderOfertas() {
   const productos = getProducts(true).filter((p) => p.oferta);
   track.innerHTML = productos.length
     ? productos.map(productCard).join("")
-    : `<p class="empty-msg">No hay ofertas activas por el momento.</p>`;
+    : `<p class="empty-msg">Por ahora no hay ofertas vigentes.</p>`;
   const section = document.querySelector("[data-ofertas-section]");
   if (section) section.hidden = productos.length === 0;
 }

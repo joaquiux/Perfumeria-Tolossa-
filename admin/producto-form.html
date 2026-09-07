@@ -72,12 +72,21 @@
 <script src="../js/config.js"></script>
 <script src="../js/data.js"></script>
 <script src="../js/store.js"></script>
+<script src="../js/cloud.js"></script>
 <script src="../js/cart.js"></script>
 <script src="../js/images.js"></script>
 <script src="../js/auth.js"></script>
 <script>
-  initStore();
-  if (!requireAdmin()) throw new Error("no auth");
+  (async () => {
+    await initStore();
+    if (!requireAdmin()) throw new Error("no auth");
+    boot();
+  })();
+  function cloudOn() {
+    try { return typeof Cloud !== "undefined" && Cloud.isConfigured() && Cloud.isReady(); }
+    catch { return false; }
+  }
+  function boot() {
   document.querySelector("[data-logout]").addEventListener("click", logout);
 
   const id = new URLSearchParams(location.search).get("id");
@@ -118,6 +127,18 @@
     images.push(url); f.imgUrl.value = ""; renderPreview();
   });
   document.querySelector("[data-file]").addEventListener("change", async (e) => {
+    if (cloudOn()) {
+      // Modo nube: los archivos se suben a Storage y se guarda la URL
+      showToast("Subiendo imágenes…");
+      for (const file of e.target.files) {
+        try { images.push(await Cloud.uploadImageFile(file, "productos")); }
+        catch { e.target.value = ""; return fail("No se pudo subir una imagen. Revisá tu sesión y conexión."); }
+      }
+      e.target.value = "";
+      renderPreview();
+      showToast("Imágenes subidas");
+      return;
+    }
     for (const file of e.target.files) {
       try { images.push(await fileToCompressedDataURL(file)); }
       catch { return fail("No se pudo procesar una imagen (¿localStorage lleno?). Probá con URL."); }
@@ -152,13 +173,13 @@
         </span>
         <small class="muted">${formatKB(dataUrlKB(src))}</small>
       </span>`).join("")
-      + (totalKB > 0 ? `<p class="muted" style="width:100%">Total en localStorage: ~${totalKB} KB (las URL no suman). Si se llena, usá URLs.</p>` : "");
+      + (totalKB > 0 && !cloudOn() ? `<p class="muted" style="width:100%">Total en localStorage: ~${totalKB} KB (las URL no suman). Si se llena, usá URLs.</p>` : "");
   }
   function fail(msg) {
     const el = document.querySelector("[data-error]");
     el.textContent = msg; el.hidden = false;
   }
-  f.addEventListener("submit", (e) => {
+  f.addEventListener("submit", async (e) => {
     e.preventDefault();
     document.querySelector("[data-error]").hidden = true;
     const nombre = f.nombre.value.trim(), marca = f.marca.value.trim(), codigo = f.codigo.value.trim();
@@ -173,7 +194,7 @@
     if (dup) return fail("Ese código ya existe en otro producto.");
     // marca libre: si es nueva, se agrega a la lista para filtros futuros
     if (!getBrands().some((b) => b.toLowerCase() === marca.toLowerCase())) {
-      saveBrands([...getBrands(), marca]);
+      await saveBrands([...getBrands(), marca]);
     }
     const data = {
       id: editing ? editing.id : makeId("p"),
@@ -189,11 +210,12 @@
       vendidos: editing ? editing.vendidos : 0,
       fechaCreacion: editing ? editing.fechaCreacion : new Date().toISOString().slice(0, 10),
     };
-    try { upsertProduct(data); }
-    catch { return fail("No se pudo guardar: localStorage lleno. Quitá imágenes subidas y usá URLs."); }
-    showToast("Producto guardado");
+    try { await upsertProduct(data); }
+    catch { return fail("No se pudo guardar: revisá espacio (modo local) o conexión/sesión (nube)."); }
+    showToast("Producto guardado y sincronizado");
     setTimeout(() => window.location.href = "productos.html", 600);
   });
+  }
 </script>
 </body>
 </html>
