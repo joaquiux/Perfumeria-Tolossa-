@@ -549,6 +549,20 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing:
 .section--ofertas .section-head p { color: rgba(239, 231, 216, 0.65); }
 .section--ofertas .section-link { border-color: var(--paper-soft); }
 .section--ofertas .section-link:hover { color: var(--amber); border-color: var(--amber); }
+/* Las tarjetas son claras: en esta sección llevan superficie oscura propia */
+.section--ofertas .product-card {
+  background: #241e15;
+  border-color: rgba(239, 231, 216, 0.16);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.section--ofertas .quick-add--static { background: var(--paper-soft); color: var(--ink); }
+.section--ofertas .quick-add--static:hover { background: var(--amber); color: var(--paper-soft); }
+.section--ofertas .quick-add--static:disabled {
+  background: transparent;
+  color: rgba(239, 231, 216, 0.5);
+  border: 1px solid rgba(239, 231, 216, 0.3);
+}
 /* Las tarjetas heredan el fondo oscuro: hay que aclarar los textos */
 .section--ofertas .product-brand,
 .section--ofertas .product-meta,
