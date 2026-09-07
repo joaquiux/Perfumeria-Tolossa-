@@ -1,0 +1,5 @@
+Poné acá tu logo como `logo.png` (ideal: PNG con fondo transparente, ~400×160px).
+
+La tienda lo busca sola en `assets/logo.png` y lo muestra en el header y footer.
+Si el archivo no está, se muestra el nombre en texto. No hay subida desde el panel:
+el logo solo lo cambiás vos poniendo el archivo en esta carpeta.

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfumes — Tolossa parfumerie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="bottle-mark" viewBox="0 0 120 160">
+    <rect x="45" y="10" width="30" height="18" rx="3" opacity="0.88"></rect>
+    <rect x="52" y="26" width="16" height="16"></rect>
+    <path d="M52,42 L68,42 L92,60 L92,145 Q92,151 86,151 L34,151 Q28,151 28,145 L28,60 Z"></path>
+  </symbol>
+</svg>
+<div class="utility-bar"><div class="wrap"><span>Envíos a todo el país</span><span>Consultá tu pedido directo por WhatsApp</span><span>Productos 100% originales</span></div></div>
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="logo">Tolossa<small>parfumerie</small></a>
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+    <nav class="main-nav" id="main-nav" data-nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="catalogo.html">Perfumes</a></li>
+        <li><a href="index.html#ofertas">Ofertas</a></li>
+        <li><a href="index.html#categorias">Categorías</a></li>
+        <li><a href="index.html#nosotros">Nosotros</a></li>
+        <li><a href="index.html#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <button type="button" data-search-toggle aria-expanded="false" aria-controls="search-panel">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.2" y2="16.2"></line></svg>
+        <span class="label-text">Buscar</span>
+      </button>
+      <a href="carrito.html" class="cart-link" aria-label="Ver carrito">
+        <svg viewBox="0 0 24 24"><path d="M6 8h12l-1.2 11.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>
+        <span class="visually-hidden">Carrito</span>
+        <span class="cart-count" data-cart-count hidden>0</span>
+      </a>
+    </div>
+  </div>
+  <div class="search-panel" id="search-panel" data-search-panel>
+    <form data-search-form><input type="search" name="q" placeholder="Buscar por marca, nombre o familia olfativa…" autocomplete="off"><button type="submit">Buscar</button></form>
+  </div>
+</header>
+<main>
+  <section class="page-head"><div class="wrap"><p class="kicker" style="font-family:var(--font-display);font-style:italic;color:var(--amber-deep)">Catálogo</p><h1>Todos los perfumes</h1><p>Buscá, filtrá y ordená. Tocá una tarjeta para ver la ficha completa.</p></div></section>
+  <div class="wrap catalog-layout">
+    <aside class="filters" aria-label="Filtros">
+      <h2>Filtros</h2>
+      <label>Buscar<input type="search" data-f-q placeholder="Dior, Sauvage, oud…"></label>
+      <label>Categoría<select data-f-cat><option value="">Todas</option></select></label>
+      <label>Marca<select data-f-marca><option value="">Todas</option></select></label>
+      <label>Familia<select data-f-fam><option value="">Todas</option></select></label>
+      <label>Género<select data-f-genero><option value="">Todos</option><option>Hombre</option><option>Mujer</option><option>Unisex</option></select></label>
+      <div class="price-row"><label>Mín<input type="number" data-f-min min="0" placeholder="0"></label><label>Máx<input type="number" data-f-max min="0" placeholder="300000"></label></div>
+      <label class="check"><input type="checkbox" data-f-oferta> Solo ofertas</label>
+      <label class="check"><input type="checkbox" data-f-nuevo> Solo nuevos</label>
+      <label class="check"><input type="checkbox" data-f-destacado> Solo destacados</label>
+      <label class="check"><input type="checkbox" data-f-stock> Solo en stock</label>
+      <button class="btn btn-secondary" type="button" data-f-clear>Limpiar filtros</button>
+    </aside>
+    <section>
+      <div class="toolbar">
+        <span data-result-count></span>
+        <label>Ordenar <select data-sort>
+          <option value="destacados">Destacados</option>
+          <option value="menor_precio">Precio menor</option>
+          <option value="mayor_precio">Precio mayor</option>
+          <option value="nuevos">Más nuevos</option>
+          <option value="vendidos">Más vendidos</option>
+          <option value="ofertas">Ofertas</option>
+        </select></label>
+      </div>
+      <div class="chips" data-chips></div>
+      <div class="product-grid" data-grid></div>
+      <nav class="pagination" data-pagination aria-label="Paginación"></nav>
+    </section>
+  </div>
+</main>
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand"><a href="index.html" class="logo">Tolossa<small>parfumerie</small></a><p>Tolossa parfumerie. Fragancias originales.</p></div>
+    <div class="footer-col"><h4>Tienda</h4><ul><li><a href="catalogo.html">Perfumes</a></li><li><a href="catalogo.html?oferta=1">Ofertas</a></li><li><a href="carrito.html">Carrito</a></li></ul></div>
+    <div class="footer-col"><h4>Categorías</h4><ul><li><a href="catalogo.html?cat=hombre">Hombre</a></li><li><a href="catalogo.html?cat=mujer">Mujer</a></li><li><a href="catalogo.html?cat=arabes">Árabes</a></li></ul></div>
+    <div class="footer-col"><h4>Contacto</h4><ul><li><a href="https://www.instagram.com/tolossaparfumerie/" target="_blank" rel="noopener">Instagram</a></li><li>San Fernando del Valle, Ayacucho 842</li></ul></div>
+  </div>
+  <div class="wrap footer-bottom"><span>© <span data-year></span> Tolossa parfumerie.</span><span class="watermark">Tolossa Lab. © | Niche Fragrances.</span></div>
+</footer>
+<div class="toast" data-toast></div>
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/catalogo.js"></script>
+</body>
+</html>

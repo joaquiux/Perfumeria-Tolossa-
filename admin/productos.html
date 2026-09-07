@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Productos — TOLOSSA Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+<div class="admin-layout">
+  <aside class="admin-side">
+    <a href="../index.html" class="logo">Tolossa<small>parfumerie</small></a>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="productos.html" class="is-active">Productos</a>
+      <a href="producto-form.html">Crear producto</a>
+      <a href="categorias.html">Categorías y marcas</a>
+      <a href="../index.html">Ver tienda</a>
+    </nav>
+    <div class="side-foot"><button class="btn-sm" data-logout>Salir</button></div>
+  </aside>
+  <main class="admin-main">
+    <h1>Productos</h1>
+    <p class="muted">Ver, editar, eliminar y activar/desactivar. Desactivar oculta de la tienda sin borrar.</p>
+    <div class="toolbar-admin">
+      <input type="search" data-q placeholder="Buscar por nombre, marca o código…" style="flex:1;min-width:220px">
+      <select data-f-estado><option value="">Todos</option><option value="ok">Disponible</option><option value="low">Poco stock</option><option value="out">Sin stock</option><option value="off">Desactivados</option></select>
+      <a class="btn btn-primary" href="producto-form.html">+ Nuevo</a>
+    </div>
+    <div class="admin-table-wrap"><table class="admin-table">
+      <thead><tr><th></th><th>Producto</th><th>Precio</th><th>Stock</th><th>Flags</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody data-rows></tbody>
+    </table></div>
+  </main>
+</div>
+<div class="toast" data-toast></div>
+<script src="../js/config.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/store.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+  initStore();
+  if (!requireAdmin()) throw new Error("no auth");
+  document.querySelector("[data-logout]").addEventListener("click", logout);
+  const q = document.querySelector("[data-q]");
+  const fEstado = document.querySelector("[data-f-estado]");
+  q.addEventListener("input", render);
+  fEstado.addEventListener("change", render);
+  function render() {
+    const term = q.value.trim().toLowerCase();
+    const est = fEstado.value;
+    let list = getProducts();
+    if (term) list = list.filter((p) => `${p.nombre} ${p.marca} ${p.codigo}`.toLowerCase().includes(term));
+    list = list.filter((p) => {
+      if (est === "off") return !p.activo;
+      if (est === "out") return p.stock <= 0 && p.activo;
+      if (est === "low") return p.stock > 0 && p.stock <= p.stockMinimo;
+      if (est === "ok") return p.stock > p.stockMinimo;
+      return true;
+    });
+    document.querySelector("[data-rows]").innerHTML = list.length ? list.map((p) => {
+      const e = stockEstado(p);
+      const flags = [p.oferta && "Oferta", p.destacado && "Destacado", p.nuevo && "Nuevo"].filter(Boolean).join(" · ") || "—";
+      const thumb = p.imagenPrincipal ? `<img class="thumb" src="${escapeHTML(p.imagenPrincipal)}" alt="">` : "—";
+      return `<tr>
+        <td>${thumb}</td>
+        <td><strong>${escapeHTML(p.marca)} ${escapeHTML(p.nombre)}</strong><br><span class="muted">${escapeHTML(p.codigo)} · ${escapeHTML(p.tamano)}</span></td>
+        <td>${formatARS(p.precio)}${p.precioAnterior ? `<br><s class="muted">${formatARS(p.precioAnterior)}</s>` : ""}</td>
+        <td>${p.stock} <span class="muted">(mín ${p.stockMinimo})</span><br>${e.label}</td>
+        <td>${escapeHTML(flags)}</td>
+        <td><span class="pill ${p.activo ? "on" : "off"}">${p.activo ? "Activo" : "Oculto"}</span></td>
+        <td><div class="row-actions">
+          <a class="btn-sm" href="../producto.html?id=${p.id}" target="_blank" rel="noopener">Ver</a>
+          <a class="btn-sm" href="producto-form.html?id=${p.id}">Editar</a>
+          <button class="btn-sm" data-toggle="${p.id}">${p.activo ? "Desactivar" : "Activar"}</button>
+          <button class="btn-sm danger" data-del="${p.id}">Eliminar</button>
+        </div></td>
+      </tr>`;
+    }).join("") : `<tr><td colspan="7">Sin productos para este filtro.</td></tr>`;
+  }
+  document.querySelector("[data-rows]").addEventListener("click", (e) => {
+    const t = e.target.closest("[data-toggle]");
+    const d = e.target.closest("[data-del]");
+    if (t) { toggleProductActive(t.dataset.toggle); render(); }
+    if (d) {
+      const p = getProductById(d.dataset.del);
+      if (confirm(`¿Eliminar "${p ? p.nombre : d.dataset.del}"? No se puede deshacer.`)) { deleteProduct(d.dataset.del); render(); showToast("Producto eliminado"); }
+    }
+  });
+  render();
+</script>
+</body>
+</html>

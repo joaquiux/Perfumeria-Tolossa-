@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Producto — TOLOSSA Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+<div class="admin-layout">
+  <aside class="admin-side">
+    <a href="../index.html" class="logo">Tolossa<small>parfumerie</small></a>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="productos.html">Productos</a>
+      <a href="producto-form.html" class="is-active">Crear producto</a>
+      <a href="categorias.html">Categorías y marcas</a>
+      <a href="../index.html">Ver tienda</a>
+    </nav>
+    <div class="side-foot"><button class="btn-sm" data-logout>Salir</button></div>
+  </aside>
+  <main class="admin-main">
+    <h1 data-title>Crear producto</h1>
+    <p class="muted">Completa la ficha. Los cambios se reflejan en Home, catálogo y ofertas al guardar.</p>
+    <form class="form-card" data-form novalidate>
+      <div class="form-grid">
+        <label>Nombre *<input name="nombre" required maxlength="80"></label>
+        <label>Marca *<input name="marca" required maxlength="60" list="brandList" placeholder="Escribí o elegí…" autocomplete="off"></label>
+        <datalist id="brandList"></datalist>
+        <label>Código *<input name="codigo" required maxlength="20"></label>
+        <label>Categoría *<select name="categoria" required></select></label>
+        <label>Género<select name="genero"><option>Hombre</option><option>Mujer</option><option>Unisex</option></select></label>
+        <label>Familia olfativa<select name="familia"></select></label>
+        <label>Concentración<select name="concentracion"><option>EDT</option><option>EDP</option><option>Parfum</option><option>Colonia</option></select></label>
+        <label>Tamaño<select name="tamano"><option>30 ml</option><option>50 ml</option><option>60 ml</option><option>75 ml</option><option selected>100 ml</option><option>80 ml</option></select></label>
+        <label>Precio normal *<input type="number" name="precio" min="0" step="1" required></label>
+        <label>Precio anterior (oferta)<input type="number" name="precioAnterior" min="0" step="1" placeholder="Vacío = sin oferta"></label>
+        <label>Cantidad disponible *<input type="number" name="stock" min="0" step="1" required></label>
+        <label>Stock mínimo<input type="number" name="stockMinimo" min="0" step="1" value="4"></label>
+        <label class="full">Descripción<textarea name="descripcion" maxlength="600" placeholder="Historia, ocasión de uso, intensidad…"></textarea></label>
+        <label>Nota salida<input name="nSalida" maxlength="60"></label>
+        <label>Nota corazón<input name="nCorazon" maxlength="60"></label>
+        <label>Nota fondo<input name="nFondo" maxlength="60"></label>
+        <label>Color silueta (si no hay foto)<select name="tono"><option value="amber">Ámbar</option><option value="blue">Azul</option><option value="rose">Rosa</option><option value="wine">Vino</option><option value="olive">Oliva</option><option value="ink">Tinta</option></select></label>
+        <label>Visible en tienda<select name="activo"><option value="1">Activo</option><option value="0">Oculto</option></select></label>
+        <div class="full checks">
+          <label><input type="checkbox" name="destacado"> Destacado (Home)</label>
+          <label><input type="checkbox" name="oferta"> Oferta (sección Ofertas)</label>
+          <label><input type="checkbox" name="nuevo"> Nuevo</label>
+        </div>
+        <div class="full">
+          <label>Imagen principal por URL<input name="imgUrl" placeholder="https://…"></label>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+            <button class="btn-sm" type="button" data-add-url>Agregar URL como imagen</button>
+            <label class="btn-sm" style="cursor:pointer">Subir archivo<input type="file" data-file accept="image/*" multiple hidden></label>
+          </div>
+          <p class="muted">Mixto: podés pegar URLs o subir archivos (se comprimen a máx 800px JPEG para no llenar localStorage). La primera imagen es la principal.</p>
+          <div class="img-preview" data-preview></div>
+        </div>
+      </div>
+      <p class="form-error" data-error hidden></p>
+      <div style="display:flex;gap:10px;margin-top:var(--sp-5)">
+        <button class="btn btn-primary" type="submit">Guardar</button>
+        <a class="btn btn-secondary" href="productos.html">Cancelar</a>
+      </div>
+    </form>
+  </main>
+</div>
+<div class="toast" data-toast></div>
+<script src="../js/config.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/store.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/images.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+  initStore();
+  if (!requireAdmin()) throw new Error("no auth");
+  document.querySelector("[data-logout]").addEventListener("click", logout);
+
+  const id = new URLSearchParams(location.search).get("id");
+  const editing = id ? getProductById(id) : null;
+  let images = editing ? [editing.imagenPrincipal, ...(editing.imagenes || [])].filter(Boolean) : [];
+
+  // selects dinámicos + marca libre con sugerencias (Bloque C)
+  const f = document.querySelector("[data-form]");
+  document.getElementById("brandList").innerHTML = getBrands().map((b) => `<option value="${escapeHTML(b)}">`).join("");
+  fillSelect(f.categoria, getCategories().map((c) => c.id), getCategories().map((c) => c.nombre));
+  fillSelect(f.familia, getFamilies());
+  function fillSelect(sel, values, labels) {
+    sel.innerHTML = "";
+    values.forEach((v, i) => {
+      const o = document.createElement("option");
+      o.value = v; o.textContent = labels ? labels[i] : v;
+      sel.appendChild(o);
+    });
+  }
+  if (editing) {
+    document.querySelector("[data-title]").textContent = "Editar producto";
+    f.nombre.value = editing.nombre; f.marca.value = editing.marca; f.codigo.value = editing.codigo;
+    f.categoria.value = editing.categoria; f.genero.value = editing.genero; f.familia.value = editing.familia;
+    f.concentracion.value = editing.concentracion; f.tamano.value = editing.tamano;
+    f.precio.value = editing.precio; f.precioAnterior.value = editing.precioAnterior ?? "";
+    f.stock.value = editing.stock; f.stockMinimo.value = editing.stockMinimo;
+    f.descripcion.value = editing.descripcion || "";
+    f.nSalida.value = editing.notas.salida || ""; f.nCorazon.value = editing.notas.corazon || ""; f.nFondo.value = editing.notas.fondo || "";
+    f.tono.value = editing.tono; f.activo.value = editing.activo ? "1" : "0";
+    f.destacado.checked = editing.destacado; f.oferta.checked = editing.oferta; f.nuevo.checked = editing.nuevo;
+  }
+  renderPreview();
+
+  document.querySelector("[data-add-url]").addEventListener("click", () => {
+    const url = f.imgUrl.value.trim();
+    if (!url) return;
+    if (!/^https?:\/\/.+/i.test(url)) return fail("La URL debe empezar con http(s)://");
+    images.push(url); f.imgUrl.value = ""; renderPreview();
+  });
+  document.querySelector("[data-file]").addEventListener("change", async (e) => {
+    for (const file of e.target.files) {
+      try { images.push(await fileToCompressedDataURL(file)); }
+      catch { return fail("No se pudo procesar una imagen (¿localStorage lleno?). Probá con URL."); }
+    }
+    e.target.value = "";
+    renderPreview();
+  });
+  document.querySelector("[data-preview]").addEventListener("click", (e) => {
+    const rm = e.target.closest("[data-rm]");
+    const left = e.target.closest("[data-left]");
+    const right = e.target.closest("[data-right]");
+    const main = e.target.closest("[data-main]");
+    if (rm) images.splice(Number(rm.dataset.rm), 1);
+    else if (left) { const i = Number(left.dataset.left); if (i > 0) [images[i - 1], images[i]] = [images[i], images[i - 1]]; }
+    else if (right) { const i = Number(right.dataset.right); if (i < images.length - 1) [images[i + 1], images[i]] = [images[i], images[i + 1]]; }
+    else if (main) { const i = Number(main.dataset.main); const [it] = images.splice(i, 1); images.unshift(it); }
+    else return;
+    renderPreview();
+  });
+  function renderPreview() {
+    const box = document.querySelector("[data-preview]");
+    if (!images.length) { box.innerHTML = `<span class="muted">Sin imágenes: se usará la silueta de color.</span>`; return; }
+    const totalKB = images.reduce((a, s) => a + dataUrlKB(s), 0);
+    box.innerHTML = images.map((src, i) => `
+      <span class="img-item">
+        <img src="${escapeHTML(src)}" alt="">
+        ${i === 0 ? '<span class="pill on">Principal</span>' : `<button type="button" class="img-mini" data-main="${i}" title="Hacer principal">★</button>`}
+        <span class="img-ctrl">
+          <button type="button" data-left="${i}" ${i === 0 ? "disabled" : ""} aria-label="Mover a la izquierda">←</button>
+          <button type="button" data-right="${i}" ${i === images.length - 1 ? "disabled" : ""} aria-label="Mover a la derecha">→</button>
+          <button type="button" data-rm="${i}" aria-label="Quitar">×</button>
+        </span>
+        <small class="muted">${formatKB(dataUrlKB(src))}</small>
+      </span>`).join("")
+      + (totalKB > 0 ? `<p class="muted" style="width:100%">Total en localStorage: ~${totalKB} KB (las URL no suman). Si se llena, usá URLs.</p>` : "");
+  }
+  function fail(msg) {
+    const el = document.querySelector("[data-error]");
+    el.textContent = msg; el.hidden = false;
+  }
+  f.addEventListener("submit", (e) => {
+    e.preventDefault();
+    document.querySelector("[data-error]").hidden = true;
+    const nombre = f.nombre.value.trim(), marca = f.marca.value.trim(), codigo = f.codigo.value.trim();
+    const precio = Number(f.precio.value), precioAnterior = f.precioAnterior.value ? Number(f.precioAnterior.value) : null;
+    const stock = Number(f.stock.value), stockMinimo = Number(f.stockMinimo.value || 0);
+    if (!nombre || !marca || !codigo) return fail("Nombre, marca y código son obligatorios.");
+    if (!(precio >= 0)) return fail("Precio inválido.");
+    if (precioAnterior != null && !(precioAnterior > precio)) return fail("El precio anterior debe ser mayor al precio de oferta.");
+    if (!(stock >= 0) || !(stockMinimo >= 0)) return fail("Stock inválido.");
+    // código único
+    const dup = getProducts().find((p) => p.codigo.toLowerCase() === codigo.toLowerCase() && (!editing || p.id !== editing.id));
+    if (dup) return fail("Ese código ya existe en otro producto.");
+    // marca libre: si es nueva, se agrega a la lista para filtros futuros
+    if (!getBrands().some((b) => b.toLowerCase() === marca.toLowerCase())) {
+      saveBrands([...getBrands(), marca]);
+    }
+    const data = {
+      id: editing ? editing.id : makeId("p"),
+      codigo, nombre, marca,
+      categoria: f.categoria.value, genero: f.genero.value, familia: f.familia.value,
+      concentracion: f.concentracion.value, tamano: f.tamano.value,
+      precio, precioAnterior, stock, stockMinimo,
+      descripcion: f.descripcion.value.trim(),
+      notas: { salida: f.nSalida.value.trim(), corazon: f.nCorazon.value.trim(), fondo: f.nFondo.value.trim() },
+      tono: f.tono.value, activo: f.activo.value === "1",
+      destacado: f.destacado.checked, oferta: f.oferta.checked, nuevo: f.nuevo.checked,
+      imagenPrincipal: images[0] || "", imagenes: images.slice(1),
+      vendidos: editing ? editing.vendidos : 0,
+      fechaCreacion: editing ? editing.fechaCreacion : new Date().toISOString().slice(0, 10),
+    };
+    try { upsertProduct(data); }
+    catch { return fail("No se pudo guardar: localStorage lleno. Quitá imágenes subidas y usá URLs."); }
+    showToast("Producto guardado");
+    setTimeout(() => window.location.href = "productos.html", 600);
+  });
+</script>
+</body>
+</html>

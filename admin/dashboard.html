@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — TOLOSSA Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+<div class="admin-layout">
+  <aside class="admin-side">
+    <a href="../index.html" class="logo">Tolossa<small>parfumerie</small></a>
+    <nav>
+      <a href="dashboard.html" class="is-active">Dashboard</a>
+      <a href="productos.html">Productos</a>
+      <a href="producto-form.html">Crear producto</a>
+      <a href="categorias.html">Categorías y marcas</a>
+      <a href="../index.html">Ver tienda</a>
+    </nav>
+    <div class="side-foot"><button class="btn-sm" data-logout>Salir</button><span data-admin-user></span></div>
+  </aside>
+  <main class="admin-main">
+    <h1>Dashboard</h1>
+    <p class="muted">Resumen del inventario y accesos rápidos.</p>
+    <div class="stat-grid" data-stats></div>
+    <h2 style="margin-top:var(--sp-7)">Alertas de stock</h2>
+    <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Producto</th><th>Estado</th><th>Stock</th><th></th></tr></thead><tbody data-alerts></tbody></table></div>
+    <h2 style="margin-top:var(--sp-7)">Más consultados</h2>
+    <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Producto</th><th>Consultas</th><th>Precio</th></tr></thead><tbody data-top></tbody></table></div>
+  </main>
+</div>
+<script src="../js/config.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/store.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+  initStore();
+  if (!requireAdmin()) throw new Error("no auth");
+  document.querySelector("[data-admin-user]").textContent = "Sesión: " + NARDO_CONFIG.adminUser;
+  document.querySelector("[data-logout]").addEventListener("click", logout);
+  const all = getProducts();
+  const sinStock = all.filter((p) => p.stock <= 0);
+  const poco = all.filter((p) => p.stock > 0 && p.stock <= p.stockMinimo);
+  const stats = [
+    ["Total productos", all.length, ""],
+    ["Sin stock", sinStock.length, sinStock.length ? "alert" : ""],
+    ["Poco stock", poco.length, poco.length ? "warn" : ""],
+    ["Ofertas", all.filter((p) => p.oferta && p.activo).length, ""],
+    ["Destacados", all.filter((p) => p.destacado && p.activo).length, ""],
+    ["Nuevos", all.filter((p) => p.nuevo && p.activo).length, ""],
+  ];
+  document.querySelector("[data-stats]").innerHTML = stats.map(([l, n, c]) =>
+    `<div class="stat ${c}"><div class="num">${n}</div><div class="lbl">${l}</div></div>`).join("");
+  const alerts = [...sinStock, ...poco];
+  document.querySelector("[data-alerts]").innerHTML = alerts.length
+    ? alerts.map((p) => { const e = stockEstado(p);
+      return `<tr><td>${escapeHTML(p.marca)} ${escapeHTML(p.nombre)}</td><td>${e.label}</td><td>${p.stock}</td><td><a class="btn-sm" href="producto-form.html?id=${p.id}">Editar</a></td></tr>`; }).join("")
+    : `<tr><td colspan="4">Sin alertas. Todo con stock suficiente.</td></tr>`;
+  document.querySelector("[data-top]").innerHTML = [...all].sort((a, b) => b.vendidos - a.vendidos).slice(0, 5)
+    .map((p) => `<tr><td>${escapeHTML(p.marca)} ${escapeHTML(p.nombre)}</td><td>${p.vendidos}</td><td>${formatARS(p.precio)}</td></tr>`).join("");
+</script>
+</body>
+</html>

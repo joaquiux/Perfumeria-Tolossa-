@@ -1,0 +1,81 @@
+/* NARDO — admin.css: reutiliza tokens de style.css */
+.admin-body { background: var(--paper); }
+.admin-layout { display: grid; grid-template-columns: 230px 1fr; min-height: 100vh; }
+.admin-side { background: var(--ink); color: var(--paper-soft); padding: var(--sp-6) var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-6); position: sticky; top: 0; height: 100vh; }
+.admin-side .logo { color: var(--paper-soft); }
+.admin-side nav { display: flex; flex-direction: column; gap: 4px; }
+.admin-side nav a { padding: 0.6em 0.8em; border-radius: var(--radius-sm); font-size: var(--fs-200); opacity: 0.85; }
+.admin-side nav a:hover, .admin-side nav a.is-active { background: rgba(239,231,216,.12); opacity: 1; }
+.admin-side .side-foot { margin-top: auto; display: flex; flex-direction: column; gap: 8px; font-size: var(--fs-100); opacity: 0.8; }
+.admin-main { padding: var(--sp-6) var(--sp-7); max-width: 1100px; width: 100%; }
+.admin-main h1 { font-size: var(--fs-600); }
+.admin-main .muted { color: var(--ink-soft); }
+.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); margin-top: var(--sp-5); }
+.stat { background: var(--paper-soft); border: 1px solid var(--line); padding: var(--sp-5); }
+.stat .num { font-family: var(--font-display); font-size: var(--fs-600); }
+.stat .lbl { font-size: var(--fs-200); color: var(--ink-soft); }
+.stat.alert { border-left: 4px solid var(--wine); }
+.stat.warn { border-left: 4px solid #b3852f; }
+.admin-table-wrap { overflow-x: auto; margin-top: var(--sp-5); background: var(--paper-soft); border: 1px solid var(--line); }
+table.admin-table { width: 100%; border-collapse: collapse; font-size: var(--fs-200); min-width: 760px; }
+.admin-table th, .admin-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+.admin-table th { background: var(--paper-deep); font-weight: 600; }
+.admin-table img.thumb { width: 44px; height: 44px; object-fit: contain; background: var(--paper-deep); }
+.pill { font-size: 0.72rem; padding: 0.25em 0.6em; border-radius: 999px; background: var(--paper-deep); white-space: nowrap; }
+.pill.on { background: #4a6b3f; color: #fff; }
+.pill.off { background: var(--wine); color: #fff; }
+.row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-sm { font-size: 0.8rem; border: 1px solid var(--line-strong); padding: 0.35em 0.7em; border-radius: var(--radius-sm); background: var(--paper); }
+.btn-sm.danger { border-color: var(--wine); color: var(--wine); }
+.toolbar-admin { display: flex; gap: 10px; align-items: center; margin-top: var(--sp-5); flex-wrap: wrap; }
+.toolbar-admin input, .toolbar-admin select { border: 1px solid var(--line-strong); padding: 0.55em 0.7em; border-radius: var(--radius-sm); background: var(--paper-soft); }
+.form-card { background: var(--paper-soft); border: 1px solid var(--line); padding: var(--sp-6); margin-top: var(--sp-5); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+.form-grid .full { grid-column: 1 / -1; }
+.form-grid label { display: flex; flex-direction: column; gap: 6px; font-size: var(--fs-200); }
+.form-grid input, .form-grid select, .form-grid textarea { border: 1px solid var(--line-strong); padding: 0.6em 0.75em; border-radius: var(--radius-sm); background: var(--paper); font: inherit; }
+.form-grid textarea { min-height: 90px; resize: vertical; }
+.checks { display: flex; gap: 16px; flex-wrap: wrap; }
+.checks label { flex-direction: row; align-items: center; gap: 8px; }
+.img-preview { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.img-preview img { width: 72px; height: 72px; object-fit: contain; background: var(--paper-deep); border: 1px solid var(--line); }
+.img-preview .img-item { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.img-preview button { position: absolute; top: -6px; right: -6px; background: var(--wine); color: #fff; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; line-height: 1; }
+.img-preview .img-ctrl { position: static; display: flex; gap: 4px; }
+.img-preview .img-ctrl button { position: static; width: 24px; height: 24px; border-radius: 4px; background: var(--ink); font-size: 13px; }
+.img-preview .img-ctrl button:disabled { opacity: 0.3; }
+.img-preview .img-mini { left: -6px; right: auto; background: var(--amber-deep); }
+.form-error { color: var(--wine); font-size: var(--fs-200); margin-top: 8px; }
+.login-wrap { min-height: 100vh; display: grid; place-items: center; padding: var(--sp-6); }
+.login-card { background: var(--paper-soft); border: 1px solid var(--line); padding: var(--sp-7); width: min(420px, 100%); }
+.login-card h1 { font-size: var(--fs-600); }
+.login-card label { display: flex; flex-direction: column; gap: 6px; margin-top: var(--sp-4); font-size: var(--fs-200); }
+.login-card input { border: 1px solid var(--line-strong); padding: 0.7em 0.85em; border-radius: var(--radius-sm); font: inherit; background: var(--paper); }
+@media (max-width: 900px) {
+  .admin-layout { grid-template-columns: 1fr; }
+  .admin-side { position: static; height: auto; }
+  .stat-grid, .form-grid { grid-template-columns: 1fr; }
+  .admin-main { padding: var(--sp-5); }
+}
+/* Bloque C: admin responsive + feedback */
+.admin-side nav a { transition: background 0.15s ease; }
+.btn-sm, .btn { transition: transform 0.15s ease, background 0.15s ease; }
+.btn-sm:active, .btn:active { transform: scale(0.97); }
+.form-grid input:focus, .form-grid select:focus, .form-grid textarea:focus,
+.toolbar-admin input:focus, .toolbar-admin select:focus, .login-card input:focus {
+  outline: 2px solid var(--amber-deep); outline-offset: 1px; border-color: var(--amber-deep);
+}
+@media (max-width: 640px) {
+  table.admin-table { min-width: 0; }
+  .admin-table thead { display: none; }
+  .admin-table, .admin-table tbody, .admin-table tr, .admin-table td { display: block; width: 100%; }
+  .admin-table tr { border-bottom: 2px solid var(--line-strong); padding: var(--sp-3) 0; }
+  .admin-table td { border: none; padding: 4px 12px; }
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .login-wrap { padding: var(--sp-4); }
+  .login-card { padding: var(--sp-5); }
+  .admin-main { padding: var(--sp-4); }
+  .toolbar-admin .btn { flex: 1 1 100%; justify-content: center; }
+  .row-actions .btn-sm { padding: 0.55em 0.85em; }
+  input, select, textarea { font-size: 16px; }
+}

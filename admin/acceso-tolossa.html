@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Acceso privado — Tolossa parfumerie</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+<div class="login-wrap">
+  <form class="login-card" data-login-form>
+    <p style="font-family:var(--font-display);font-style:italic;color:var(--amber-deep)">Tolossa parfumerie · Privado</p>
+    <h1>Ingresar</h1>
+    <p class="muted">Acceso reservado. Esta página no está enlazada desde la tienda.</p>
+    <label>Usuario<input name="user" autocomplete="username" required></label>
+    <label>Clave<input type="password" name="pass" autocomplete="current-password" required></label>
+    <p class="form-error" data-login-error hidden>Usuario o clave incorrectos.</p>
+    <button class="btn btn-primary" type="submit" style="margin-top:var(--sp-5);width:100%;justify-content:center">Entrar</button>
+    <p style="margin-top:var(--sp-4)"><a href="../index.html">← Volver a la tienda</a></p>
+  </form>
+</div>
+<script src="../js/config.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/store.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+  initStore();
+  if (isAdmin()) window.location.href = "dashboard.html";
+  document.querySelector("[data-login-form]").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    if (tryLogin(fd.get("user").trim(), fd.get("pass"))) window.location.href = "dashboard.html";
+    else document.querySelector("[data-login-error]").hidden = false;
+  });
+</script>
+</body>
+</html>
