@@ -35,6 +35,14 @@ function initStore() {
   if (!_read(STORE_KEYS.families, null)) _write(STORE_KEYS.families, SEED_FAMILIES);
   if (!_read(STORE_KEYS.cart, null)) _write(STORE_KEYS.cart, []);
   if (!_read(STORE_KEYS.settings, null)) _write(STORE_KEYS.settings, { whatsapp: NARDO_CONFIG.whatsapp });
+  else {
+    // migración: si quedó guardado el número viejo de prueba, actualizar al real
+    const s = _read(STORE_KEYS.settings, {});
+    if (s && s.whatsapp === "5493834000000") {
+      s.whatsapp = NARDO_CONFIG.whatsapp;
+      _write(STORE_KEYS.settings, s);
+    }
+  }
   if (!_read(STORE_KEYS.meta, null)) _write(STORE_KEYS.meta, { version: 2 });
 }
 

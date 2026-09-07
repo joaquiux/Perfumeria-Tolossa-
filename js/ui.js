@@ -67,6 +67,19 @@ function renderHeroImage() {
   if (!hero) return;
   box.innerHTML = `<div class="rings" aria-hidden="true"><span></span><span></span><span></span></div><img class="hero-photo" src="${escapeHTML(hero)}" alt="Perfume destacado">`;
 }
+/* Todos los links con data-wa-link usan el número del panel (settings).
+   Así, al cambiar el WhatsApp en admin, cambia en TODA la tienda. */
+function wireWhatsAppLinks() {
+  let whatsapp = "";
+  try { whatsapp = getSettings().whatsapp || NARDO_CONFIG.whatsapp; } catch { whatsapp = ""; }
+  if (!whatsapp) return;
+  document.querySelectorAll("[data-wa-link]").forEach((a) => {
+    const text = a.getAttribute("data-wa-text") || "";
+    a.href = `https://wa.me/${whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
+    a.target = "_blank";
+    a.rel = "noopener";
+  });
+}
 function skeletonCards(n = 4) {
   return Array.from({ length: n }, () => `
     <div class="skel" aria-hidden="true"><div class="sk-media"></div>
@@ -137,6 +150,7 @@ function wireGlobalHeader() {
   if (y) y.textContent = new Date().getFullYear();
   renderSiteLogo();
   renderHeroImage();
+  wireWhatsAppLinks();
   // ticker de la barra superior: duplica el contenido para loop continuo
   document.querySelectorAll(".utility-bar").forEach((bar) => {
     const wrap = bar.querySelector(".wrap");
