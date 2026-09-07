@@ -164,7 +164,7 @@ function render() {
     filtered.length === 0 ? "Sin resultados" : `${filtered.length} fragancia${filtered.length !== 1 ? "s" : ""}`;
 
   document.querySelector("[data-grid]").innerHTML = slice.length
-    ? slice.map(productCard).join("")
+    ? slice.map(safeCard).join("")
     : `<div class="empty-state"><h3>Sin resultados</h3><p>Nada coincide con esos filtros. Probá otra marca o sacá algún filtro.</p><a class="btn btn-secondary" href="catalogo.html">Limpiar filtros</a></div>`;
 
   const chips = [];

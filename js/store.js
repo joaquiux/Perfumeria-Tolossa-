@@ -241,7 +241,18 @@ function escapeHTML(s) {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 function formatARS(n) {
-  return Number(n || 0).toLocaleString("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 });
+  try {
+    return Number(n || 0).toLocaleString("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 });
+  } catch {
+    // Fallback manual si el locale no existe en el dispositivo
+    const v = String(Math.round(Number(n) || 0));
+    return "$ " + v.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+}
+/* Render seguro: si una tarjeta falla, no rompe toda la grilla */
+function safeCard(p) {
+  try { return productCard(p); }
+  catch (e) { console.warn("[nardo] tarjeta:", e); return ""; }
 }
 function stockEstado(p) {
   if (p.stock <= 0) return { label: "Sin stock", cls: "stock-out" };

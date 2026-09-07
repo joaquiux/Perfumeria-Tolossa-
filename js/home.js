@@ -39,7 +39,7 @@ function renderOfertas() {
   if (!track) return;
   const productos = getProducts(true).filter((p) => p.oferta);
   track.innerHTML = productos.length
-    ? productos.map(productCard).join("")
+    ? productos.map(safeCard).join("")
     : `<p class="empty-msg">Por ahora no hay ofertas vigentes.</p>`;
   const section = document.querySelector("[data-ofertas-section]");
   if (section) section.hidden = productos.length === 0;
@@ -47,7 +47,7 @@ function renderOfertas() {
 function renderDestacados() {
   const grid = document.querySelector("[data-destacados]");
   if (!grid) return;
-  grid.innerHTML = getProducts(true).filter((p) => p.destacado).map(productCard).join("");
+  grid.innerHTML = getProducts(true).filter((p) => p.destacado).map(safeCard).join("");
 }
 function renderMarcas() {
   const strip = document.querySelector("[data-marcas]");

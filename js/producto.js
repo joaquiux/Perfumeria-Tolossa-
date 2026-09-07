@@ -89,5 +89,5 @@ function renderRelated(p) {
   const grid = document.querySelector("[data-related]");
   const pool = getProducts(true).filter((x) => x.id !== p.id);
   const score = (x) => (x.categoria === p.categoria ? 3 : 0) + (x.marca === p.marca ? 2 : 0) + (x.familia === p.familia ? 1 : 0);
-  grid.innerHTML = pool.sort((a, b) => score(b) - score(a)).slice(0, 4).map(productCard).join("");
+  grid.innerHTML = pool.sort((a, b) => score(b) - score(a)).slice(0, 4).map(safeCard).join("");
 }
