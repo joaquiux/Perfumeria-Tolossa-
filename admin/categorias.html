@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Categorías y marcas — TOLOSSA Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+<link rel="canonical" href="https://perfumeria-tolossa.web.app/admin/categorias.html">
 <link rel="stylesheet" href="../css/style.css">
 <link rel="stylesheet" href="../css/admin.css">
 </head>
@@ -31,7 +34,7 @@
     <div class="form-card">
       <h2>Imagen principal del inicio</h2>
       <p class="muted">Reemplaza las botellitas del banner principal. Ideal: PNG con fondo transparente, 800×1000px. Si la vaciás, vuelve la ilustración original.</p>
-      <div class="toolbar-admin"><input data-hero-url placeholder="https://…/perfume.png" style="flex:1;min-width:220px"><button class="btn-sm" data-hero-add-url>Usar URL</button><label class="btn-sm" style="cursor:pointer">Subir archivo<input type="file" data-hero-file accept="image/*" hidden></label><button class="btn-sm danger" data-hero-del>Volver a botellitas</button></div>
+      <div class="toolbar-admin"><input data-hero-url placeholder="https://…/perfume.png" style="flex:1;min-width:220px"><button class="btn-sm" data-hero-add-url>Usar URL</button><label class="btn-sm" style="cursor:pointer">Subir archivo<input type="file" data-hero-file accept="image/jpeg,image/png,image/webp" hidden></label><button class="btn-sm danger" data-hero-del>Volver a botellitas</button></div>
       <div style="margin-top:12px;background:var(--paper-deep);padding:16px;border-radius:4px;display:inline-block" data-hero-preview></div>
     </div>
     <div class="form-card">
@@ -90,7 +93,7 @@
       <td><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
         <input data-cat-img-url="${escapeHTML(c.id)}" placeholder="https://…" value="${c.imagen && c.imagen.startsWith("http") ? escapeHTML(c.imagen) : ""}" style="min-width:160px;border:1px solid var(--line-strong);padding:.4em .6em;border-radius:2px">
         <button class="btn-sm" data-cat-img-ok="${escapeHTML(c.id)}">OK</button>
-        <label class="btn-sm" style="cursor:pointer">Subir<input type="file" data-cat-img-file="${escapeHTML(c.id)}" accept="image/*" hidden></label>
+        <label class="btn-sm" style="cursor:pointer">Subir<input type="file" data-cat-img-file="${escapeHTML(c.id)}" accept="image/jpeg,image/png,image/webp" hidden></label>
         ${c.imagen ? `<button class="btn-sm danger" data-cat-img-del="${escapeHTML(c.id)}">Quitar</button>` : ""}
       </div></td>
       <td>${counts[c.id] || 0} prod.</td><td><button class="btn-sm danger" data-cat-del="${escapeHTML(c.id)}">Eliminar</button></td></tr>`).join("");
@@ -109,7 +112,14 @@
       // Modo nube: subir a Storage y guardar la URL
       showToast("Subiendo imagen…");
       try { setCatImage(inp.dataset.catImgFile, await Cloud.uploadImageFile(inp.files[0], "categorias")); }
-      catch { showToast("No se pudo subir. Revisá tu sesión y conexión."); }
+      catch (err) {
+        console.error("[nardo] upload:", err);
+        try {
+          const durl = await fileToCompressedDataURL(inp.files[0], 800);
+          if (durl.length > 500 * 1024) { inp.value = ""; return showToast("Foto muy pesada. Usá un JPG chico o URL."); }
+          setCatImage(inp.dataset.catImgFile, durl);
+        } catch (e2) { console.error("[nardo] fallback:", e2); showToast("No se pudo subir (" + String((err && (err.code || err.message)) || "conexión").replace(/^storage\//, "") + "). Probá JPG/PNG o URL."); }
+      }
       inp.value = "";
       return;
     }
@@ -190,11 +200,23 @@
   });
   document.querySelector("[data-hero-file]").addEventListener("change", async (e) => {
     if (!e.target.files.length) return;
+    const f0 = e.target.files[0];
     if (cloudOn()) {
-      // Modo nube: subir a Storage y guardar la URL
+      // Modo nube: subir a Storage y guardar la URL (con fallback local)
       showToast("Subiendo imagen…");
-      try { await saveSettings({ heroImage: await Cloud.uploadImageFile(e.target.files[0], "hero") }); renderHero(); showToast("Imagen del inicio actualizada"); }
-      catch { showToast("No se pudo subir. Revisá tu sesión y conexión."); }
+      let okMsg = "Imagen del inicio actualizada";
+      try { await saveSettings({ heroImage: await Cloud.uploadImageFile(f0, "hero") }); }
+      catch (err) {
+        console.error("[nardo] upload:", err);
+        if (/heic|heif/i.test(f0.type || "")) { e.target.value = ""; return showToast("Formato HEIC de iPhone no soportado: convertí a JPG o pegá la URL."); }
+        try {
+          const durl = await fileToCompressedDataURL(f0, 800);
+          if (durl.length > 500 * 1024) { e.target.value = ""; return showToast("Foto muy pesada. Usá un JPG chico o pegá la URL."); }
+          await saveSettings({ heroImage: durl });
+          okMsg = "Imagen del inicio actualizada (sin Storage)";
+        } catch (e2) { console.error("[nardo] fallback:", e2); e.target.value = ""; return showToast("No se pudo subir (" + String((err && (err.code || err.message)) || "conexión").replace(/^storage\//, "") + "). Probá JPG/PNG o URL."); }
+      }
+      renderHero(); showToast(okMsg);
       e.target.value = "";
       return;
     }

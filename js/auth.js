@@ -5,24 +5,31 @@ function _cloudAuthOn() {
   try { return typeof Cloud !== "undefined" && Cloud.isConfigured() && Cloud.isReady(); }
   catch { return false; }
 }
-function isAdmin() {
-  if (_cloudAuthOn()) return !!Cloud.currentUser();
+function _localAdminOn() {
   try { return sessionStorage.getItem("nardo_admin") === "1"; } catch { return false; }
+}
+function isAdmin() {
+  if (_cloudAuthOn()) return !!(Cloud.currentUser() || _localAdminOn());
+  return _localAdminOn();
 }
 function requireAdmin() {
   if (!isAdmin()) { window.location.href = "acceso-tolossa.html"; return false; }
   return true;
 }
-// Devuelve Promise<boolean> en modo nube; boolean en modo local.
+// En modo nube intenta Firebase primero y cae a clave local
+// (útil mientras no hay proveedor Email/Password creado).
 function tryLogin(user, pass) {
+  const localOk = () => {
+    if (user === NARDO_CONFIG.adminUser && pass === NARDO_CONFIG.adminPass) {
+      try { sessionStorage.setItem("nardo_admin", "1"); } catch {}
+      return true;
+    }
+    return false;
+  };
   if (_cloudAuthOn()) {
-    return Cloud.signIn(user, pass).then(() => true).catch(() => false);
+    return Cloud.signIn(user, pass).then(() => true).catch(() => localOk());
   }
-  if (user === NARDO_CONFIG.adminUser && pass === NARDO_CONFIG.adminPass) {
-    try { sessionStorage.setItem("nardo_admin", "1"); } catch {}
-    return true;
-  }
-  return false;
+  return localOk();
 }
 function logout() {
   const go = () => { window.location.href = "acceso-tolossa.html"; };

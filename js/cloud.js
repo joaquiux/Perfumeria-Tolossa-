@@ -210,7 +210,7 @@ const Cloud = (() => {
   }
 
   return {
-    isConfigured, isReady, init, pullAll, subscribe,
+    isConfigured, isReady, init, pullAll, subscribe, subscribe: subscribe,
     upsertProduct, deleteProduct, pushTaxonomies, pushSettings,
     bumpVendidos, pushAll, uploadImageFile,
     currentUser, signIn, signOut,

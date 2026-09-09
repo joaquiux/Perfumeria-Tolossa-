@@ -5,6 +5,9 @@
 
 /* ---------- Tokens ---------- */
 :root {
+  /* Controles nativos (selects, checkboxes) en modo oscuro para que
+     acompañen al tema en todos los navegadores. */
+  color-scheme: dark;
   /* Paleta premium oscura: negro cálido + rojo vino fuerte, texto marfil.
      Inspirada en tiendas premium: predomina el negro, acentúa el vino. */
   --ink: #f0e7d3;
@@ -957,7 +960,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing:
 .spec-table th, .spec-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
 .spec-table th { color: var(--ink-soft); font-weight: 500; width: 40%; }
 .qty-row { display: flex; gap: 8px; align-items: center; margin-top: var(--sp-5); }
-.qty-row input { width: 70px; border: 1px solid var(--line-strong); padding: 0.6em; border-radius: var(--radius-sm); }
+.qty-row input { width: 70px; border: 1px solid var(--line-strong); padding: 0.6em; border-radius: var(--radius-sm); background: var(--paper); color: var(--ink); }
 .cart-layout { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--sp-6); padding-bottom: var(--sp-9); align-items: start; }
 .cart-lines { display: flex; flex-direction: column; gap: var(--sp-4); }
 .cart-line { display: grid; grid-template-columns: 72px 1fr auto; gap: var(--sp-4); background: var(--paper-soft); border: 1px solid var(--line); padding: var(--sp-4); align-items: center; }
@@ -1107,3 +1110,18 @@ body.nav-open .site-header { z-index: 60; }
 /* Tarjetas con bordes suaves */
 .product-card { border-radius: var(--radius-md); overflow: hidden; }
 .pagination .is-current { background: var(--wine); border-color: var(--wine); color: #fff; }
+
+/* Legibilidad en recuadros (tema oscuro): texto marfil explícito en todos
+   los controles; sin esto algunos navegadores pintan letras negras sobre
+   el fondo oscuro y no se lee lo escrito. */
+input, select, textarea { color: var(--ink); }
+input::placeholder, textarea::placeholder { color: var(--ink-soft); opacity: 1; }
+select option, select optgroup { background-color: #ffffff; color: #171310; }
+input[type="checkbox"], input[type="radio"] { accent-color: var(--amber-deep); }
+.search-panel input, .filters input, .filters select, .toolbar select,
+.cart-form input, .cart-form select, .cart-form textarea { color: var(--ink); }
+input:-webkit-autofill, select:-webkit-autofill {
+  -webkit-text-fill-color: #f0e7d3;
+  -webkit-box-shadow: 0 0 0 60px #1b1610 inset;
+  caret-color: #f0e7d3;
+}

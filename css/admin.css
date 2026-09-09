@@ -79,3 +79,14 @@ table.admin-table { width: 100%; border-collapse: collapse; font-size: var(--fs-
   .row-actions .btn-sm { padding: 0.55em 0.85em; }
   input, select, textarea { font-size: 16px; }
 }
+
+/* Legibilidad en recuadros del panel: texto marfil explícito sobre los
+   fondos oscuros (algunos navegadores heredaban negro y no se leía). */
+.admin-main input, .admin-main select, .admin-main textarea,
+.login-card input, .login-card select {
+  color: var(--ink);
+}
+.toolbar-admin input, .toolbar-admin select { background-color: var(--paper-soft); color: var(--ink); }
+.form-grid input, .form-grid select, .form-grid textarea { background-color: var(--paper); color: var(--ink); }
+.login-card input { background-color: var(--paper); }
+.admin-main input::placeholder, .admin-main textarea::placeholder { color: var(--ink-soft); opacity: 1; }

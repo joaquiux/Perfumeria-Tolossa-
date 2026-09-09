@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       renderOfertas();
       renderDestacados();
       renderMarcas();
+      if (typeof renderHeroImage === "function") renderHeroImage();
     });
   }
 });

@@ -1,0 +1,11 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+// TEMPORAL: escritura abierta hasta configurar Firebase Auth.
+// Después: volver a `request.auth != null` (ver Auth en consola).
+      allow read: if true;
+      allow write: if request.resource.size < 2 * 1024 * 1024;
+    }
+  }
+}
